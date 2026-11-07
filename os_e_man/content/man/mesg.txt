@@ -1,0 +1,22 @@
+MESG(1)                         General Commands                        MESG(1)
+
+NAME
+     mesg - let chat interrupt your terminal, or not
+
+SYNOPSIS
+     mesg [y|n]
+
+DESCRIPTION
+     With no argument, mesg prints whether chat may write to your terminal:
+     "is y" or "is n".
+
+     mesg n stops channel notices and direct messages from appearing
+     between your prompts. Nothing is lost: dingaling(1) still has all of
+     it. mesg y turns them back on.
+
+NOTES
+     Nobody on dingaling can tell whether you have messages turned off. Your
+     account is read-only, so nobody on dingaling can tell you exist.
+
+SEE ALSO
+     dingaling(1)

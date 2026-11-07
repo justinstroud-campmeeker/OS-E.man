@@ -1,0 +1,28 @@
+INTRO(7)                HPCG Workstation Manual                 INTRO(7)
+
+NAME
+     intro - welcome to WKS-0417
+
+DESCRIPTION
+     You are Pat Dunn, Consultant II, Retail Delivery, Halvorsen-Pike
+     Consulting Group. Your client is Kettering Family Markets. Your desk is
+     on the 3rd floor, behind Kevin.
+
+     Everything happens in crab. Start with:
+          emmy            read your mail
+          train           the mandatory refresher
+          dingaling       see what people are saying
+          help            everything else
+
+     Time passes: one minute per second while you are connected, slower
+     when you are not looking, and slower still after you quit(1). The
+     workstation stays up when you disconnect. The workday ends at 17:00,
+     but not while you're away; the next day waits for you. You come back
+     at 09:00. You always come back.
+
+NOTES
+     Some data you will see was not supposed to be there. What you do with
+     it is between you and the replica.
+
+SEE ALSO
+     crab(1), man(1)

@@ -1,0 +1,22 @@
+TRAIN(1)                    General Commands                    TRAIN(1)
+
+NAME
+     train - Engineering Excellence Refresher (EER-26)
+
+SYNOPSIS
+     train                    progress and current module
+     train next               show the current challenge
+     train hint               a hint, written by L&D
+     train submit [ANSWER]    submit. SQL can go inline; snek opens an editor
+
+DESCRIPTION
+     Six modules of SQL and snek, graded automatically by lnd-grader against
+     a "sanitized" replica of the client's reporting database.
+
+     Use sql(1) to explore the replica before you submit.
+
+NOTES
+     Completion is tracked. Curiosity is not graded.
+
+SEE ALSO
+     sql(1), snek(1)

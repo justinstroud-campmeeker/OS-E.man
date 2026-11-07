@@ -1,0 +1,29 @@
+[
+  {
+    "id": "g_minutes",
+    "kind": "web",
+    "text": "minutes.lattice-board.example",
+    "todo": "minutes.lattice-board.example  (saw it on the screen? check)",
+    "when": {"day": 1}
+  },
+  {
+    "id": "g_custodian",
+    "kind": "mail",
+    "text": "custodian@lattice-board.example",
+    "todo": "email custodian@lattice-board.example. ask what, exactly",
+    "when": {"flag": "glimpse:g_minutes:done"},
+    "reply": {
+      "delay": 35,
+      "from": "custodian@lattice-board.example",
+      "subject": "Re: your enquiry (LSB-ACK-0041)",
+      "body": "Thank you for contacting the Lattice Stewardship Board.\n\nYour enquiry has been received and filed under:\n\n  Category:  OBSERVER / SELF-REFERRAL\n  Instance:  Dunmore\n  Priority:  [[R4:none required]]\n\nYou were not supposed to see this address. That is not a criticism. The\nBoard notes that you looked anyway, and has updated the minutes.\n\nPlease do not reply to this message. Replies are read.\n\nLattice Stewardship Board, Office of the Custodian"
+    }
+  },
+  {
+    "id": "g_halcyon",
+    "kind": "web",
+    "text": "status.halcyon-hvac.example",
+    "todo": "status.halcyon-hvac.example  (the thermostat people?)",
+    "when": {"day": 2}
+  }
+]

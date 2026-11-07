@@ -1,0 +1,13 @@
+{
+  "sql:.tables": 1,
+  "sql:svc_accounts": 1,
+  "sql:loyalty_members": 1,
+  "sql:vendor_access": 1,
+  "sql:ir_register": 1,
+  "ls:/srv/training/.staging": 1,
+  "cat:/var/log/pos-sync.log": 1,
+  "whois:svc-relay.int.hpcg.corp": 1,
+  "su:facilities": 1,
+  "web:lattice-minutes": 1,
+  "web:halcyon-status": 1
+}

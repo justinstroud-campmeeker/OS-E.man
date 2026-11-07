@@ -1,0 +1,12 @@
+LS(1)                    General Commands                    LS(1)
+
+NAME
+     ls - list directory contents
+
+SYNOPSIS
+     ls [-a] [PATH...]
+
+DESCRIPTION
+     Lists files. Directories end with '/'. -a also lists hidden entries,
+     which are hidden for a reason, the reason usually being that someone
+     meant to delete them.

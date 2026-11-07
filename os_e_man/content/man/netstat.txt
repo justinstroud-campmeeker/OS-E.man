@@ -1,0 +1,12 @@
+NETSTAT(8)                System Manager's Manual                 NETSTAT(8)
+
+NAME
+     netstat - show network connections
+
+SYNOPSIS
+     netstat
+
+DESCRIPTION
+     Lists open connections from this workstation and the program that owns
+     each one. A program of "?" means the owner could not be determined.
+     This is normal. Please stop asking.

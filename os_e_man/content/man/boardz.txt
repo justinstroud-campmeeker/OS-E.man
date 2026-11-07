@@ -1,0 +1,9 @@
+BOARDZ(1)                    General Commands                    BOARDZ(1)
+
+NAME
+     boardz - abusenet reader
+
+DESCRIPTION
+     abusenet is news, forums, search and dating rolled into one service,
+     with the worst parts of each. Blocked on the HPCG network (category:
+     Leisure).

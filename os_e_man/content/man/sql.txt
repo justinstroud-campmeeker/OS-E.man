@@ -1,0 +1,17 @@
+SQL(1)                    General Commands                    SQL(1)
+
+NAME
+     sql - query the EER-26 training replica
+
+SYNOPSIS
+     sql SELECT ...
+     sql .tables
+     sql .schema TABLE
+
+DESCRIPTION
+     Runs ANSI-ish SQL (SQLite dialect) against a read-only replica. Only
+     SELECT is permitted. The course documents four tables: stores,
+     products, transactions and employees.
+
+BUGS
+     .tables lists more than four tables. See HPCG-LND-5512 (In Progress).

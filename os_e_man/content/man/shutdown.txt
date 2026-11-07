@@ -1,0 +1,20 @@
+SHUTDOWN(8)                 System Manager's Manual                 SHUTDOWN(8)
+
+NAME
+     shutdown - save the world and power it off
+
+SYNOPSIS
+     shutdown
+
+DESCRIPTION
+     Saves everything and stops the world server. Nothing happens while it
+     is off. Start it again with:
+
+          python -m os_e_man
+
+NOTES
+     Turning the office off does not make anyone at the office like you
+     more. It was worth checking.
+
+SEE ALSO
+     quit(1)

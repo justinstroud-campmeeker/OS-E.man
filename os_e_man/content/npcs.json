@@ -1,0 +1,234 @@
+{
+  "people": {
+    "doug": {
+      "handle": "doug.faraday",
+      "name": "Doug Faraday",
+      "role": "Engagement Manager, Retail Delivery (your manager)"
+    },
+    "kev": {
+      "handle": "kmarsh",
+      "name": "Kevin Marsh",
+      "role": "Senior Consultant. Sits behind you. Narrates."
+    },
+    "priya": {
+      "handle": "praman",
+      "name": "Priya Raman",
+      "role": "Data Engineer. The only one who answers questions."
+    },
+    "brenda": {
+      "handle": "b.achterberg",
+      "name": "Brenda Achterberg",
+      "role": "Office Manager, HPCG Dunmore. Has been here longer than the building."
+    },
+    "lnd": {
+      "handle": "lnd-bot",
+      "name": "L&D Bot",
+      "role": "Automated. Relentless."
+    },
+    "it": {
+      "handle": "it-servicedesk",
+      "name": "IT Service Desk",
+      "role": "Ticket queue with a face drawn on it."
+    }
+  },
+  "beats": [
+    {
+      "id": "b1",
+      "when": {
+        "day": 1,
+        "at": "09:12"
+      },
+      "channel": "#dunmore-general",
+      "who": "doug",
+      "text": "reminder: Engineering Excellence refresher is mandatory. 100% by Friday or it goes on the utilization review. per my last email."
+    },
+    {
+      "id": "b2",
+      "when": {
+        "day": 1,
+        "at": "10:30"
+      },
+      "channel": "#dunmore-general",
+      "who": "kev",
+      "flag": "heard_hazelnut",
+      "text": "whoever keeps ordering hazelnut pods: I know it's not technically a crime. it should be."
+    },
+    {
+      "id": "b3",
+      "when": {
+        "day": 1,
+        "at": "11:40"
+      },
+      "channel": "#dunmore-general",
+      "who": "priya",
+      "flag": "heard_clive",
+      "text": "my stapler is named Clive. Clive has been taken. return Clive, no questions asked."
+    },
+    {
+      "id": "b4",
+      "when": {
+        "day": 1,
+        "at": "14:05"
+      },
+      "channel": "dm",
+      "who": "doug",
+      "flag": "heard_status",
+      "text": "(DM) re: our 1:1 (the 7am one you missed, it was in your calendar): honestly nobody reads the status reports. just send them. don't tell the client I said that"
+    },
+    {
+      "id": "b5",
+      "when": {
+        "day": 1,
+        "at": "15:20"
+      },
+      "channel": "#dunmore-general",
+      "who": "brenda",
+      "text": "Kitchen reminder: pods are ordered quarterly based on the beverage survey. Nobody completed the beverage survey. — Brenda, Office Services"
+    },
+    {
+      "id": "b6",
+      "when": {
+        "day": 2,
+        "at": "09:40"
+      },
+      "channel": "#dunmore-general",
+      "who": "kev",
+      "text": "@pdunn finish the refresher yet or are you still on module 1.1 lol. it's COUNT(*) man"
+    },
+    {
+      "id": "b7",
+      "when": {
+        "day": 2,
+        "at": "13:10"
+      },
+      "channel": "dm",
+      "who": "priya",
+      "flag": "heard_thermo",
+      "text": "(DM) between us, the 3rd floor at 74 degrees makes me want to lie down in the parking lot. 68 or I walk. don't say anything, Doug set it"
+    },
+    {
+      "id": "b8",
+      "when": {
+        "day": 2,
+        "at": "16:30"
+      },
+      "channel": "#dunmore-general",
+      "who": "doug",
+      "text": "Team: Q4 utilization target is 112%. Yes, that's possible. Read the deck."
+    },
+    {
+      "id": "b9",
+      "when": {
+        "day": 3,
+        "at": "10:05"
+      },
+      "channel": "#dunmore-general",
+      "who": "doug",
+      "text": "can whoever is 'pdunn' confirm they are on this team. I keep seeing the name in timesheets."
+    },
+    {
+      "id": "b10",
+      "when": {
+        "day": 1,
+        "at": "16:10"
+      },
+      "channel": "#dunmore-general",
+      "who": "kev",
+      "flag": "heard_squeak",
+      "text": "pdunn's chair squeaks every time they lean back. just an observation. an observation I make hourly"
+    }
+  ],
+  "chatter": {
+    "normal": [
+      {
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "anyone else's badge just beep twice and do nothing"
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "timesheets. today. please. I'm being asked about them."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "who microwaved fish. I'm not mad. I'm writing it down."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "lnd",
+        "text": "Reminder: Engineering Excellence Refresher (EER-26) is due Friday. Completion is tracked."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "it",
+        "text": "Scheduled maintenance: VPN will be unavailable 12:00-12:05, and also at other times."
+      },
+      {
+        "channel": "#kfm-delivery",
+        "who": "doug",
+        "text": "client asked for 'a dashboard'. no further details. who's free"
+      },
+      {
+        "channel": "#kfm-delivery",
+        "who": "priya",
+        "text": "store 42 sync failed again on lane 4. lane 4 isn't connected to anything. closing as won't-fix"
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "has anyone seen pdunn at the holiday party. ever. is pdunn real"
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "brenda",
+        "text": "The 2nd floor fridge will be emptied Friday. Everything. I mean everything. — Brenda"
+      }
+    ],
+    "uneasy": [
+      {
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "ok did anyone else notice the kitchen changed like an hour after someone complained about it"
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "Brenda said good morning to me by name today. I've never told her my name."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "let's keep #general professional. and maybe kind. especially about Office Services."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "not saying Brenda reads the chat. saying I'm going to start being nicer in the chat."
+      }
+    ],
+    "afraid": [
+      {
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "I filled out the beverage survey. all of it. twice. just in case."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "I have cancelled all of my 1:1s until further notice. unrelated."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "someone left a thank-you card on Brenda's desk. there are four cards now."
+      },
+      {
+        "channel": "#dunmore-general",
+        "who": "it",
+        "text": "Reminder: the facilities portal is managed by Office Services. Please do not ask IT about it. Please."
+      }
+    ]
+  }
+}

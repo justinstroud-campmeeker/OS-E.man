@@ -1,0 +1,24 @@
+BLEDIT(1)                    General Commands                    BLEDIT(1)
+
+NAME
+     bledit - edit a text file
+
+SYNOPSIS
+     bledit FILE
+
+DESCRIPTION
+     A full-screen editor a bit like pico, but less. You can write files
+     under ~ and /tmp.
+
+     ^O   write out (you stay in the editor)
+     ^X   exit; asks to save if you changed anything since the last ^O
+     ^K   cut the current line        ^U   paste it back
+     ^C   show the cursor position
+
+     Whatever you last wrote out is what gets saved, or submitted, when you
+     exit. Exit without ever writing out and nothing happens.
+
+BUGS
+     ^S also writes out, because people keep pressing it. This was raised
+     as a feature request in 2017 and closed as "user error" in 2018, then
+     quietly fixed in 2019 by someone who no longer works here.

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "e_lnd_welcome", "when": {"day": 1, "at": "09:00"},
+    "from": "learning.development@hpcg.corp",
+    "subject": "ACTION REQUIRED: Engineering Excellence Refresher (EER-26) — Mandatory",
+    "body": "Hello Pat,\n\nAs part of Halvorsen-Pike Consulting Group's ongoing commitment to Engineering\nExcellence™, all delivery staff in Retail & Consumer are enrolled in the\nEngineering Excellence Refresher (EER-26).\n\nThe refresher is a short, self-paced series of coding challenges (SQL and snek)\nbased on real client data*, so that the learning experience is relevant.\n\nTo begin, run:   train\n\nCompletion is due Friday and is reflected in your utilization review.\n\n* Data has been sanitized in accordance with HPCG-LND-5512.\n\nWarm regards,\nLearning & Development | People Experience | HPCG\n\nThis message was sent to a distribution list. Do not reply. Replies are not read.\nTracking ID: LND-EER26-0417-PD"
+  },
+  {
+    "id": "e_doug_1", "when": {"day": 1, "at": "09:06"},
+    "from": "doug.faraday@hpcg.corp",
+    "subject": "RE: RE: FW: refresher",
+    "body": "Pat,\n\nPer my last email, the refresher is mandatory. I know you know SQL. Leadership\nwants to see 100% across the practice by Friday. Please don't be the reason we\nare at 96%.\n\nAlso, timesheets.\n\nDoug\n\nDoug Faraday | Engagement Manager, Retail Delivery | HPCG\n\"Outcomes, not outputs.\""
+  },
+  {
+    "id": "e_it_welcome", "when": {"day": 1, "at": "09:20"},
+    "from": "it-servicedesk@hpcg.corp",
+    "subject": "Your workstation (WKS-0417) — quick reference",
+    "body": "Your workstation runs the crab shell. Type `help` for a list of commands and\n`man <command>` for details. GUI tools are available on request (request denied).\n\nPlease do not run network diagnostics (ping, whois, netstat) against hosts you\ndo not own. They are installed so that you can, but please do not.\n\n— IT Service Desk | Ticket auto-closed: ITSD-118204"
+  },
+  {
+    "id": "e_lnd_progress", "when": {"done": "c2"}, "delay": 3,
+    "from": "learning.development@hpcg.corp",
+    "subject": "You're making progress! (EER-26: 33%)",
+    "body": "Great work, Pat!\n\nYou have completed 2 of 6 modules of the Engineering Excellence Refresher.\nLearners who complete the refresher report 14% more Excellence.\n\nNext up: snek Fundamentals. snek is HPCG's approved, secure subset of Python.\n`man snek` for details.\n\nLearning & Development | HPCG\nTracking ID: LND-EER26-0417-PD-P2"
+  },
+  {
+    "id": "e_kev_columns", "when": {"done": "c4"}, "delay": 6,
+    "from": "kevin.marsh@hpcg.corp",
+    "subject": "lol",
+    "body": "did the employees table have a column called access_notes for you too\nthat can't be in the sanitized extract right\n\nanyway I finished the whole thing yesterday. it took me 20 min. just saying\n\n-k"
+  },
+  {
+    "id": "e_sec_reminder", "when": {"curiosity": 2}, "delay": 10,
+    "from": "security-awareness@hpcg.corp",
+    "subject": "Reminder: See something? Say something. (Don't investigate.)",
+    "body": "This is a quarterly reminder.\n\nIf you encounter data you should not have access to, STOP. Do not query it.\nDo not read it. Do not think about it more than necessary. Report it to\nsecurity@hpcg.corp, where it will be triaged within 30-45 business days.\n\nCuriosity is a valued HPCG competency in its proper context.\n\nInformation Security | HPCG\nTracking ID: SEC-AWR-Q4-ALL"
+  },
+  {
+    "id": "e_lnd_day2", "when": {"day": 2, "at": "09:03", "not_done": "c6"},
+    "from": "learning.development@hpcg.corp",
+    "subject": "Gentle reminder: EER-26 is due Friday",
+    "body": "Hello Pat,\n\nOur records show your Engineering Excellence Refresher is not yet complete.\nThis is a gentle reminder. The next reminder will be less gentle. The one\nafter that will cc your manager.\n\nLearning & Development | HPCG\nTracking ID: LND-EER26-0417-PD-R1"
+  },
+  {
+    "id": "e_certificate", "when": {"done": "c6"}, "delay": 2,
+    "from": "learning.development@hpcg.corp",
+    "subject": "Congratulations! Certificate of Engineering Excellence (Tier 1 — Participation)",
+    "body": "Congratulations, Pat!\n\nYou have completed EER-26 and earned:\n\n    CERTIFICATE OF ENGINEERING EXCELLENCE\n    Tier 1 (Participation)\n    Valid for 12 months or until the next reorg\n\nYour completion has been reported to your manager and to the utilization\nreview. Please do not reply to ask what Tier 2 is.\n\nLearning & Development | HPCG\nTracking ID: LND-EER26-0417-PD-DONE"
+  },
+  {
+    "id": "e_doug_done", "when": {"done": "c6"}, "delay": 40,
+    "from": "doug.faraday@hpcg.corp",
+    "subject": "RE: refresher",
+    "body": "thanks. finally. you were the last one.\n\ntimesheets.\n\nDoug"
+  },
+  {
+    "id": "e_brightwater", "when": {"flag": "got_facilities"}, "delay": 4,
+    "from": "accounts@brightwater-ocs.example",
+    "subject": "Welcome back, HPCG Dunmore! (It's been a while)",
+    "body": "Hi Office Services team,\n\nWe noticed a login to your Brightwater Coffee Services account after 2,431 days.\nWelcome back!\n\nAs a reminder, orders placed through your facilities portal are fulfilled\nautomatically, same-day, with no review. You told us that's how you liked it.\n\nYour account manager,\nTrish\n\n(You are receiving this because you are listed as the facilities contact.\nThis email was forwarded to pdunn@hpcg.corp by a mail rule nobody remembers creating.)"
+  },
+  {
+    "id": "e_it_audit", "when": {"exposure": 5, "flag": "got_facilities"}, "delay": 15,
+    "from": "it-servicedesk@hpcg.corp",
+    "subject": "Routine review: facilities portal account (ITSD-118377)",
+    "body": "Hello,\n\nA routine review has been opened for the shared 'facilities' account after\nstaff reported that it 'knows things'. IT does not believe the account knows\nthings. Accounts do not know things.\n\nNo action is required at this time. If the review finds anything unusual, the\npassword will be rotated, which it should have been in 2019.\n\n— IT Service Desk\n\n(You are receiving this because you are on the Dunmore-All distribution list.)"
+  },
+  {
+    "id": "e_hr_memo", "when": {"mystique": 6, "flag": "got_facilities"}, "delay": 20,
+    "from": "people.relations@hpcg.corp",
+    "subject": "[CONFIDENTIAL] Internal Record FI-0001 — Facilities Irregularities",
+    "flag_on_deliver": "memo_delivered",
+    "body": "INTERNAL RECORD FI-0001\nClassification: PEOPLE-RELATIONS / CONFIDENTIAL\nSubject: B. Achterberg (Office Manager, HPCG Dunmore)\nStatus: Under observation (passive)\n\nHandling Procedures:\n  Staff are not to confront the subject about kitchen inventory, room bookings\n  or the thermostat. Questions about pod selection are to be routed to People\n  Relations in writing. The subject is to be greeted normally. Normally.\n\nDescription:\n  Over the past several business days, office logistics at HPCG Dunmore have\n  changed in ways that correspond to remarks made by staff in meetings, in chat\n  channels and, in at least one case, a private conversation the subject did\n  not attend.\n\n  The subject denies involvement. The subject's denial was described by three\n  separate witnesses as \"exactly what she would say.\"\n\n  Productivity in the affected area is up 9%. Complaints about the kitchen are\n  down 100%. Staff report a feeling of being \"gently observed\".\n\nAddendum FI-0001-A:\n  Brightwater Coffee Services confirms the orders came through the facilities\n  portal. The portal account's password has not been changed since 2019. People\n  Relations has chosen not to pursue this line of inquiry, as it is an IT matter,\n  and IT has asked us to stop calling.\n\nAddendum FI-0001-B:\n  A second actor is [[R6:not suspected]].\n\nAddendum FI-0001-C:\n  Recommended action: none. Recommended disposition toward the subject:\n  respectful.\n\n-- end of record --\n\nThis message was sent to you in error. Please delete it. Please do not tell\nanyone that you were sent it in error.\n\n------------------------------------------------------------\n[ OS-E.man build 0.1: this is the end of the first foothold. ]\n[ Tallyho Badging is next. See vendor_access.               ]"
+  },
+  {
+    "id": "e_lockout", "when": {"flag": "locked_out"}, "delay": 5,
+    "from": "it-servicedesk@hpcg.corp",
+    "subject": "ITSD-118377 resolved: facilities account password rotated",
+    "body": "The facilities account password has been rotated, per the routine review.\nThe new password has been given to B. Achterberg on a sticky note.\n\nThe review found nothing unusual. Staff continue to report that the account\n'knew things'. IT considers the matter closed and also would like it to be.\n\n— IT Service Desk\n\n(Too many people started to wonder who else could have known. Lie low.\n People forget a little each day.)"
+  }
+]

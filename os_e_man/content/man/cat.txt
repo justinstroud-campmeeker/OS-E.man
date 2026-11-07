@@ -1,0 +1,11 @@
+CAT(1)                    General Commands                    CAT(1)
+
+NAME
+     cat - print files
+
+SYNOPSIS
+     cat FILE...
+
+BUGS
+     Does not involve a cat. Repeated tickets about this (ITSD-4410, -4411,
+     -4412, -4419) have been merged.

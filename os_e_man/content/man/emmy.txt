@@ -1,0 +1,16 @@
+EMMY(1)                    General Commands                    EMMY(1)
+
+NAME
+     emmy - email for people who do not want email
+
+SYNOPSIS
+     emmy               list the inbox (* = unread)
+     emmy read N        read message N
+     emmy next          read the oldest unread message
+     emmy send ADDR     write a message to ADDR (first line: Subject:)
+
+DESCRIPTION
+     emmy could not send mail. Nobody noticed when it started to.
+
+BUGS
+     Reply-all is not implemented. This is considered emmy's best feature.

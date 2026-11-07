@@ -1,0 +1,16 @@
+SU(1)                    General Commands                    SU(1)
+
+NAME
+     su - switch user
+
+SYNOPSIS
+     su USER
+     exit
+
+DESCRIPTION
+     Prompts for USER's password and starts a session as USER. exit
+     returns to your own account.
+
+NOTES
+     Shared accounts should have their passwords rotated regularly. "Should"
+     is doing a lot of work in that sentence.

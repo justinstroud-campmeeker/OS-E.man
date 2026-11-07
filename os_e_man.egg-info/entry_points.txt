@@ -1,0 +1,2 @@
+[console_scripts]
+osEman = os_e_man.__main__:main

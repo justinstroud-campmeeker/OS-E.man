@@ -1,0 +1,56 @@
+{
+  "minutes.lattice-board.example": {
+    "title": "Lattice Stewardship Board: Minutes, Session 41",
+    "body": "MINUTES OF SESSION 41\nLattice Stewardship Board (closed session)\n\nItem 1. Previous minutes approved without reading, as is customary.\n\nItem 2. Dunmore instance. Office logistics continue to drift toward\n        the stated preferences of staff. No complaints received.\n        Complaints about the absence of complaints: one (1).\n\nItem 3. Coffee. Noted.\n\nItem 4. The observer at desk 17 remains unremarkable. [[R3:The Board\n        considers this the observer's most important quality.]]\n        No action.\n\nItem 5. Any other business: [[R5:none that can be minuted]].\n\nNext session: when required.",
+    "links": [
+      "minutes.lattice-board.example/attendance",
+      "minutes.lattice-board.example/archive"
+    ],
+    "glimpse": "g_minutes",
+    "poke": "web:lattice-minutes",
+    "addenda": [
+      {
+        "flag": "route:badge_portal",
+        "text": "Addendum 41-A. The observer has found the vendors page. The Board\n               approves of the vendors page."
+      },
+      {
+        "flag": "route:badge_support",
+        "text": "Addendum 41-B. The observer asked Tallyho nicely. Tallyho said yes.\n               Tallyho always says yes. This is why the Board uses Tallyho."
+      },
+      {
+        "flag": "demoted",
+        "text": "Addendum 41-C. The observer has been relocated. This is not a criticism.\n               The observer's desk has not been relocated. Neither has the observer, really."
+      }
+    ]
+  },
+  "minutes.lattice-board.example/attendance": {
+    "title": "Session 41: Attendance",
+    "body": "PRESENT\n  The Chair\n  The Custodian\n  The Secretary (minuting)\n  [[R4:P. Dunn (non-voting, unaware)]]\n\nAPOLOGIES\n  None. Apologies are not accepted at this level.\n\nQuorum: achieved, as it always is.",
+    "links": [
+      "minutes.lattice-board.example"
+    ]
+  },
+  "minutes.lattice-board.example/archive": {
+    "title": "Archive",
+    "body": "Sessions 1-40 are held in the archive.\n\nThe archive is not available to observers.\n\nIf you are reading this, you are an observer.",
+    "links": [
+      "minutes.lattice-board.example"
+    ]
+  },
+  "status.halcyon-hvac.example": {
+    "title": "Halcyon HVAC: Site Status",
+    "body": "HALCYON BUILDING SYSTEMS: CUSTOMER STATUS PAGE\n\n  Site:          HPCG Dunmore, floors 2-4\n  Contract:      HAL-77120 (comfort tier)\n  Setpoint:      70 F\n  Last change:   requested via tenant portal\n  Requested by:  [[R3:the building]]\n\n  Known issues:  3rd floor reports being 'gently observed'. This is not\n                 an HVAC fault. Ticket closed.\n\nAll systems nominal.",
+    "links": [],
+    "glimpse": "g_halcyon",
+    "poke": "web:halcyon-status"
+  },
+  "badge.tallyho.example/reset/th4471": {
+    "title": "Tallyho Badging: Console Reset",
+    "body": "Your console has been reset.\n\nTenant: HPCG Dunmore (0417)\nOperator: facilities\n\nThis link has now been used.",
+    "links": [],
+    "requires": {
+      "flag": "route_mail:badge_support"
+    },
+    "grant": "badge_support"
+  }
+}

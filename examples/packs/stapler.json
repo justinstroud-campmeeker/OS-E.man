@@ -1,0 +1,39 @@
+{
+  "id": "ex-stapler",
+  "source": "hand",
+  "note": "Example pack. Contains two deliberate hallucinations: 'marguerite' was never hired, and print-07.hpcg.corp is not on the network.",
+  "emails": [
+    {
+      "id": "e_ex_stapler",
+      "when": {"day": 1, "at": "10:30"},
+      "delay": 5,
+      "from": "office.services@hpcg.corp",
+      "subject": "Reminder: Shared Office Equipment Is Shared (OS-2211)",
+      "body": "Hi all,\n\nA reminder that the red stapler at the Aquarium printer is shared office\nequipment and belongs to the Aquarium printer.\n\nIt has been signed out to Marguerite (Finance) since 2019. If you are\nMarguerite, please return it. If you know Marguerite, please let Office\nServices know which floor she sits on, as we cannot find her in the directory.\n\nPrint jobs to print-07.hpcg.corp are queuing but not printing. This is known.\n\nThanks,\nOffice Services"
+    }
+  ],
+  "beats": [
+    {
+      "id": "b_ex_marguerite",
+      "when": {"day": 1, "at": "11:05"},
+      "channel": "#dunmore-general",
+      "who": "kev",
+      "text": "who is marguerite. i have worked here six years"
+    },
+    {
+      "id": "b_ex_reply",
+      "when": {"day": 1, "at": "11:40"},
+      "channel": "#dunmore-general",
+      "who": "marguerite",
+      "text": "returned."
+    }
+  ],
+  "chatter": {
+    "normal": [
+      {"channel": "#dunmore-general", "who": "priya", "text": "print-07 has 41 jobs queued and the oldest one is from 2019"}
+    ]
+  },
+  "files": {
+    "/home/shared/lost-and-found.txt": "LOST & FOUND, HPCG Dunmore, 3rd floor kitchen\n\n- 1x umbrella (black)\n- 1x lanyard, badge removed\n- 1x red stapler, RETURNED, no name on the sign-in sheet\n"
+  }
+}

@@ -1,0 +1,11 @@
+IPCONFIG(8)                System Manager's Manual                 IPCONFIG(8)
+
+NAME
+     ipconfig, ifconfig - show network configuration
+
+SYNOPSIS
+     ipconfig
+
+DESCRIPTION
+     Shows this workstation's address. Both names work because a 2019 survey
+     was split exactly 50/50 and nobody wanted to make the call.

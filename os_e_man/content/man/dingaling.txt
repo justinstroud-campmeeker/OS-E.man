@@ -1,0 +1,16 @@
+DINGALING(1)                    General Commands                    DINGALING(1)
+
+NAME
+     dingaling - company chat
+
+SYNOPSIS
+     dingaling          show the last 20 messages
+
+DESCRIPTION
+     The global HPCG chat client. New messages also show up on your
+     terminal between prompts, the old-fashioned way. Direct messages
+     arrive write(1)-style. If that gets to be too much, see mesg(1).
+
+BUGS
+     Your account has been "read-only, pending onboarding" since 2021. You
+     can see everything. Nobody can see you. This is filed as a bug.

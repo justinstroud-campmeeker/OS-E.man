@@ -1,0 +1,6 @@
+./game-spec.md
+./MANIFEST.in
+./pyproject.toml
+./CLAUDE.md
+./.gitignore
+./.github

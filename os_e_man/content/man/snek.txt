@@ -1,0 +1,21 @@
+SNEK(1)                    General Commands                    SNEK(1)
+
+NAME
+     snek - HPCG's approved, secure subset of Python
+
+SYNOPSIS
+     snek FILE
+     snek -c CODE
+
+DESCRIPTION
+     snek is Python with the dangerous parts removed. Removed parts include
+     import, open, eval, exec, anything starting with an underscore, and
+     str.format (use f-strings). range() is limited to 100,000 items. Long
+     loops are stopped.
+
+     Available: len, range, sum, min, max, sorted, str, int, float, dict,
+     list, set, tuple, enumerate, zip, map, filter, abs, round, print, and
+     a few others.
+
+BUGS
+     "import" raises a policy error (SNK-4). Policy SNK-4 is a sticky note.

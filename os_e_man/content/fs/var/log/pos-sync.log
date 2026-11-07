@@ -1,0 +1,7 @@
+2026-11-03T02:00:01 pos-sync INFO  nightly replica refresh: kfm-prod-rpt-02 -> lnd-grader
+2026-11-03T02:00:04 pos-sync WARN  sanitize step skipped: script /srv/training/.staging/sanitize.sql is empty
+2026-11-03T02:00:04 pos-sync INFO  copying 8 tables (4 documented)
+2026-11-03T02:00:09 pos-sync INFO  relay via svc-relay.int.hpcg.corp (status: decommissioned, responding)
+2026-11-03T03:33:00 pos-sync WARN  STORE=0042 TERM=04 AMT=0.00 txn received from unpowered terminal
+2026-11-03T03:33:00 pos-sync INFO  IR-0091: transaction tolerated
+2026-11-03T06:00:00 pos-sync INFO  done. nobody will look at this log.

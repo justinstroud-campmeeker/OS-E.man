@@ -1,0 +1,44 @@
+{
+  "self": {"host": "wks-0417.hpcg.corp", "ip": "10.17.3.117", "mask": "255.255.0.0", "gw": "10.17.0.1",
+           "dns": "10.17.0.53", "mac": "3c:52:82:0f:04:17"},
+  "hosts": {
+    "localhost": {"ip": "127.0.0.1", "ms": 0.04},
+    "wks-0417.hpcg.corp": {"ip": "10.17.3.117", "ms": 0.05},
+    "mail.hpcg.corp": {"ip": "10.17.0.10", "ms": 1.8,
+      "whois": ["Host: mail.hpcg.corp", "Owner: HPCG Corporate IT", "Purpose: email. Mostly reminders."]},
+    "lnd-grader.hpcg.corp": {"ip": "10.17.0.44", "ms": 2.4,
+      "whois": ["Host: lnd-grader.hpcg.corp", "Owner: HPCG Learning & Development",
+                "Service account: lnd-grader (read: *.*)", "Notes: \"temporary\" since 2017"]},
+    "kfm-prod-rpt-02.kfm.corp": {"ip": "10.40.2.2", "ms": 18.7,
+      "whois": ["Host: kfm-prod-rpt-02.kfm.corp", "Owner: Kettering Family Markets IT",
+                "Purpose: production reporting replica", "Contact: kfm-it@kfm.corp (out of office since 2023)"]},
+    "svc-relay.int.hpcg.corp": {"ip": "10.17.0.66", "ms": 0.0, "ttl": 1,
+      "whois": [
+        "Item #:          HOST-0066",
+        "Host:            svc-relay.int.hpcg.corp",
+        "Access Class:    Decommissioned",
+        "Owner:           [[R1:none on record]]",
+        "Handling:        Do not ping. Do not route through. Do not decommission again.",
+        "Description:     Relay host retired in March 2019. Physical hardware was",
+        "                 removed and recycled. Continues to answer at 0.0 ms.",
+        "                 [[R2:Nightly pos-sync traffic still routes through it.]]",
+        "                 [[R3:Nobody has asked it to.]]",
+        "Addendum:        [DATA EXPUNGED] per ITSD-90031."
+      ]},
+    "orders.brightwater-ocs.example": {"ip": "203.0.113.40", "ms": 41.2,
+      "whois": ["Domain: brightwater-ocs.example", "Registrant: Brightwater Coffee Services LLC",
+                "Purpose: office coffee, water and the occasional engraved stapler"]},
+    "bms.halcyon-hvac.example": {"ip": "203.0.113.77", "ms": 55.0,
+      "whois": ["Domain: halcyon-hvac.example", "Registrant: Halcyon HVAC", "Service: building management (thermostats)"]},
+    "badge.tallyho.example": {"ip": "203.0.113.90", "ms": null,
+      "whois": ["Domain: tallyho.example", "Registrant: Tallyho Badging Inc.", "Service: door badges, visitor management",
+                "[[R5:Reachable from the facilities portal. Later.]]"]}
+  },
+  "netstat": [
+    ["tcp", "10.17.3.117:51022", "10.17.0.10:993",    "ESTABLISHED", "emmy"],
+    ["tcp", "10.17.3.117:51188", "10.17.0.44:5432",   "ESTABLISHED", "sql"],
+    ["tcp", "10.17.3.117:52001", "10.17.0.12:6667",   "ESTABLISHED", "dingaling"],
+    ["tcp", "10.17.3.117:49152", "10.17.0.66:443",    "ESTABLISHED", "?"],
+    ["udp", "10.17.3.117:5353",  "*:*",               "",            "mdns"]
+  ]
+}

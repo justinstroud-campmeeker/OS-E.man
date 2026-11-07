@@ -1,0 +1,273 @@
+[
+  {
+    "id": "o_hazelnut",
+    "kind": "pods",
+    "match": [
+      "hazelnut"
+    ],
+    "mystique": 2,
+    "exposure": 0,
+    "note": "Kev complained publicly. Anyone could have seen it.",
+    "reactions": [
+      {
+        "delay": 20,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "the pods. ALL of the pods are hazelnut now. every box. who did this"
+      },
+      {
+        "delay": 45,
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "kev complained at 10:30 and the order changed by the afternoon. is Office Services reading #general?"
+      },
+      {
+        "delay": 90,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "please don't @ Brenda about the pods. she went very quiet when I asked."
+      }
+    ],
+    "requires_flag": "heard_hazelnut"
+  },
+  {
+    "id": "o_decaf",
+    "kind": "pods",
+    "match": [
+      "decaf"
+    ],
+    "mystique": 2,
+    "exposure": 0,
+    "note": "Everyone knows Doug runs on coffee.",
+    "reactions": [
+      {
+        "delay": 25,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "who switched the kitchen to decaf. I'm asking calmly."
+      },
+      {
+        "delay": 60,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "doug was short with Brenda about the beverage survey on Monday. just noting the timeline"
+      },
+      {
+        "delay": 120,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "I have completed the beverage survey."
+      }
+    ]
+  },
+  {
+    "id": "o_clive",
+    "kind": "order",
+    "match": [
+      "clive"
+    ],
+    "mystique": 3,
+    "exposure": 1,
+    "note": "Priya mentioned Clive in #general. Fairly public.",
+    "reactions": [
+      {
+        "delay": 30,
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "a box came. it's a stapler. it's engraved. it says CLIVE."
+      },
+      {
+        "delay": 55,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "the packing slip says it was ordered by Office Services. Brenda wasn't in on Tuesday."
+      },
+      {
+        "delay": 100,
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "I said thank you to Brenda. she said 'for what' and kept looking at me"
+      }
+    ],
+    "requires_flag": "heard_clive"
+  },
+  {
+    "id": "o_status",
+    "kind": "book",
+    "match": [
+      "status report",
+      "status reports"
+    ],
+    "mystique": 3,
+    "exposure": 4,
+    "note": "Doug said that in a private 1:1. With you.",
+    "reactions": [
+      {
+        "delay": 15,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "who booked the Aquarium with that title. I'm not mad. I said that in a 1:1."
+      },
+      {
+        "delay": 40,
+        "channel": "dm",
+        "who": "doug",
+        "text": "(DM) hey. random question. did you mention our 1:1 to anyone?"
+      },
+      {
+        "delay": 80,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "Brenda books all the rooms. Brenda hears everything. this is known."
+      }
+    ],
+    "requires_flag": "heard_status"
+  },
+  {
+    "id": "o_thermo",
+    "kind": "thermostat",
+    "match": [
+      "68"
+    ],
+    "mystique": 2,
+    "exposure": 3,
+    "note": "Priya told only you.",
+    "reactions": [
+      {
+        "delay": 30,
+        "channel": "#dunmore-general",
+        "who": "priya",
+        "text": "it's 68 on the 3rd floor. it's exactly 68. I said 68 to exactly one person"
+      },
+      {
+        "delay": 70,
+        "channel": "dm",
+        "who": "priya",
+        "text": "(DM) did you say something to Brenda? it's fine if you did. I'm just asking"
+      },
+      {
+        "delay": 110,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "thermostat is managed by Office Services. do not touch it. I mean it, I can't explain it."
+      }
+    ],
+    "requires_flag": "heard_thermo"
+  },
+  {
+    "id": "o_cooler",
+    "kind": "cooler",
+    "match": [
+      "cancel",
+      "pause",
+      "none"
+    ],
+    "mystique": 1,
+    "exposure": 0,
+    "note": "Ordinary misery. A good alibi.",
+    "reactions": [
+      {
+        "delay": 40,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "water cooler is empty and there's a note on it that says DELIVERY PAUSED. by whom"
+      },
+      {
+        "delay": 95,
+        "channel": "#dunmore-general",
+        "who": "brenda",
+        "text": "I did not pause the water. I would like to know who paused the water. — Brenda"
+      }
+    ]
+  },
+  {
+    "id": "o_kev_room",
+    "kind": "book",
+    "match": [
+      "chair squeak",
+      "squeak"
+    ],
+    "mystique": 2,
+    "exposure": 1,
+    "note": "Kev's 'observation' about your chair was public. Booking a room about it points a little at you.",
+    "reactions": [
+      {
+        "delay": 20,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "why is Big Conf booked as 'Chair Squeak Retrospective'"
+      },
+      {
+        "delay": 50,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "ok I take back the chair thing. to whoever. to Brenda. sorry Brenda"
+      }
+    ],
+    "requires_flag": "heard_squeak"
+  },
+  {
+    "id": "o_badge_kitchen",
+    "kind": "badge",
+    "match": [
+      "kitchen lock"
+    ],
+    "mystique": 2,
+    "exposure": 1,
+    "note": "The kitchen locked itself the day after the fridge complaints.",
+    "reactions": [
+      {
+        "delay": 4,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "kitchen door says ACCESS DENIED. to me. to the kitchen."
+      },
+      {
+        "delay": 15,
+        "channel": "#dunmore-general",
+        "who": "brenda",
+        "text": "the kitchen is closed for reasons. I was not told the reasons."
+      }
+    ]
+  },
+  {
+    "id": "o_badge_revoke_doug",
+    "kind": "badge",
+    "match": [
+      "revoke doug"
+    ],
+    "mystique": 2,
+    "exposure": 2,
+    "reactions": [
+      {
+        "delay": 10,
+        "channel": "#dunmore-general",
+        "who": "doug",
+        "text": "my badge doesn't work. I'm in the lobby. can someone let me in. I'm your manager"
+      },
+      {
+        "delay": 25,
+        "channel": "#dunmore-general",
+        "who": "kev",
+        "text": "doug was in the lobby for 20 minutes. nobody let him in. nobody decided not to."
+      }
+    ]
+  },
+  {
+    "id": "o_badge_server",
+    "kind": "badge",
+    "match": [
+      "server-rm unlock"
+    ],
+    "mystique": 1,
+    "exposure": 3,
+    "reactions": [
+      {
+        "delay": 6,
+        "channel": "#dunmore-general",
+        "who": "it",
+        "text": "ITSD notice: the server room door is open. if you opened it, please stop."
+      }
+    ]
+  }
+]

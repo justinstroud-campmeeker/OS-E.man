@@ -1,0 +1,11 @@
+WHOIS(1)                    General Commands                    WHOIS(1)
+
+NAME
+     whois - look up the owner of a host
+
+SYNOPSIS
+     whois HOST
+
+DESCRIPTION
+     Prints the registration record for HOST. Internal hosts use HPCG's
+     asset register, which is accurate as of the last time anyone checked.

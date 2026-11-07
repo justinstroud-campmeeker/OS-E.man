@@ -1,0 +1,14 @@
+FACILITIES PORTAL — Office Services, HPCG Dunmore
+Logged in as: facilities
+
+  facil status              what's on order and what's booked
+  facil pods <variety>      set the kitchen pod order (Brightwater, same-day)
+  facil cooler <schedule>   water cooler delivery (e.g. "Tue/Fri", "pause")
+  facil order "<item>"      supply order (Brightwater + office supply catalog)
+  facil book <room> "<title>"   book a meeting room
+  facil thermostat <degF>   3rd floor setpoint (Halcyon HVAC)
+  facil vendors             (removed in v2.3, ITSD-2019-0117)
+
+Rooms: Aquarium, Boiler Room, Big Conf, Phone Booth 2
+
+Brightwater does not review orders. Neither does anyone else.

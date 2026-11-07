@@ -1,0 +1,17 @@
+BADGE(1)                   General Commands                   BADGE(1)
+
+NAME
+     badge - Tallyho Badging operator console
+
+SYNOPSIS
+     badge                       door states and revoked badges
+     badge log                   today's badge events
+     badge door DOOR lock|unlock|normal
+     badge revoke|restore WHO
+
+DESCRIPTION
+     Every change is logged against the operator account. The operator
+     account is facilities. The log is reviewed quarterly, by facilities.
+
+NOTES
+     People adapt to doors faster than they question them.

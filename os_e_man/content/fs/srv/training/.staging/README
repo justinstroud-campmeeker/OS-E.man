@@ -1,0 +1,7 @@
+TODO before launch (HPCG-LND-5512):
+  - write sanitize.sql
+  - drop svc_accounts, loyalty_members, vendor_access, ir_register from replica
+  - stop the grader running as lnd-grader (it can read everything)
+  - ask Brenda to rotate the facilities password, which is in svc_accounts for some reason
+
+launch date moved up. shipping as-is. it's just training. nobody looks at .tables

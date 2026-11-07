@@ -1,0 +1,18 @@
+PING(8)                System Manager's Manual                 PING(8)
+
+NAME
+     ping - check whether a host is there
+
+SYNOPSIS
+     ping HOST
+
+DESCRIPTION
+     Sends four packets and reports whether anything answered. Something
+     usually does.
+
+NOTES
+     IT asks that you do not ping hosts you do not own. IT does not say who
+     owns what.
+
+SEE ALSO
+     whois(1), netstat(8), /etc/hosts

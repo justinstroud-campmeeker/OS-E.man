@@ -1,0 +1,20 @@
+QUIT(1)                         General Commands                        QUIT(1)
+
+NAME
+     quit, disconnect, exit - close your connection to wks-0417
+
+SYNOPSIS
+     quit
+
+DESCRIPTION
+     Ends this session and saves. The workstation stays up. The office
+     carries on without you: mail arrives, people talk, things get ordered.
+     It just happens more slowly when nobody is looking, and the day will
+     not end until you come back.
+
+     To actually turn the world off, see shutdown(8).
+
+     Ctrl+D at an empty prompt does the same thing, like any shell.
+
+SEE ALSO
+     shutdown(8)

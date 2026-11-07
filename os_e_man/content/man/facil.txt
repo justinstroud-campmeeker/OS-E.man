@@ -1,0 +1,23 @@
+FACIL(1)                 Office Services Manual                 FACIL(1)
+
+NAME
+     facil - HPCG Dunmore facilities portal
+
+SYNOPSIS
+     facil status
+     facil pods VARIETY
+     facil cooler SCHEDULE
+     facil order "ITEM"
+     facil book ROOM "TITLE"
+     facil thermostat DEGF
+
+DESCRIPTION
+     Office logistics for the Dunmore office: kitchen pods, water delivery,
+     supplies, meeting rooms and the 3rd floor thermostat. Orders go to
+     Brightwater Coffee Services and are fulfilled same-day without review.
+
+     Everything done here is attributed to Office Services.
+
+NOTES
+     People notice when the office responds to them. They notice more when
+     it responds to something they said to only one person.

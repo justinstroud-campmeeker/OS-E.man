@@ -1,0 +1,8 @@
+CD(1)                    General Commands                    CD(1)
+
+NAME
+     cd, pwd - change / print the working directory
+
+SYNOPSIS
+     cd [PATH]      (no PATH: go home)
+     pwd

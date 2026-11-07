@@ -1,0 +1,22 @@
+CRAB(1)                    General Commands                    CRAB(1)
+
+NAME
+     crab - the HPCG restricted shell
+
+SYNOPSIS
+     command [args...] [| grep [-i] PATTERN]
+
+DESCRIPTION
+     crab is a shell with the parts people liked removed. It supports
+     quoting, exactly one kind of pipe (into grep), history (Up/Down) and
+     Tab completion of commands and paths.
+
+     ~ is your home directory. Hidden files start with '.' and are shown
+     with ls -a.
+
+BUGS
+     Pipes into anything except grep are reported as "a growth mindset
+     opportunity".
+
+SEE ALSO
+     help, intro(7)

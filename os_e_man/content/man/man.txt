@@ -1,0 +1,10 @@
+MAN(1)                    General Commands                    MAN(1)
+
+NAME
+     man - read the manual
+
+SYNOPSIS
+     man TOPIC
+
+DESCRIPTION
+     Shows the manual page for TOPIC. Try: man intro

@@ -1,0 +1,16 @@
+WEBBLE(1)                  General Commands                  WEBBLE(1)
+
+NAME
+     webble - a text-mode web browser for a network with no web
+
+SYNOPSIS
+     webble URL         fetch and show a page
+     webble N           follow link [N] on the last page
+     webble -dump URL   show the page with its references
+
+DESCRIPTION
+     webble was installed by a contractor in 2014 and has never been
+     updated. Most addresses do not resolve. Some do.
+
+BUGS
+     There is no back button. You cannot go back.

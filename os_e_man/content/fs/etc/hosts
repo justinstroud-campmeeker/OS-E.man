@@ -1,0 +1,6 @@
+127.0.0.1      localhost
+10.17.3.117    wks-0417.hpcg.corp      wks-0417
+10.17.0.10     mail.hpcg.corp
+10.17.0.44     lnd-grader.hpcg.corp
+10.40.2.2      kfm-prod-rpt-02.kfm.corp
+# 10.17.0.66   svc-relay.int.hpcg.corp   # decommissioned 2019. do not use.

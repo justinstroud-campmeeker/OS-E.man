@@ -1,0 +1,3 @@
+# Ship all game content, including the in-game filesystem's dotfiles (.staging/, .keep).
+graft os_e_man/content
+global-exclude __pycache__ *.py[cod]

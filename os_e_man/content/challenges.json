@@ -1,0 +1,79 @@
+{
+  "challenges": [
+    {
+      "id": "c1",
+      "title": "Module 1.1 — Foundational Querying (Store Footprint)",
+      "kind": "sql",
+      "prompt": "The client wants to understand their footprint.\nWrite a query that returns the number of stores in the `stores` table.\n\nSubmit with:  train submit SELECT ...",
+      "hint": "COUNT(*) counts rows. You have been doing this for eleven years.",
+      "expected_sql": "SELECT COUNT(*) FROM stores"
+    },
+    {
+      "id": "c2",
+      "title": "Module 1.2 — Aggregation for Business Outcomes",
+      "kind": "sql",
+      "prompt": "Return each store_id and its total transaction amount (SUM of `amount`)\nfrom `transactions`. One row per store. Column order: store_id, total.",
+      "hint": "GROUP BY store_id. The ordering of rows is not graded. Nothing about this is graded, really.",
+      "expected_sql": "SELECT store_id, SUM(amount) FROM transactions GROUP BY store_id"
+    },
+    {
+      "id": "c3",
+      "title": "Module 2.1 — snek Fundamentals: Log Parsing",
+      "kind": "snek",
+      "func": "parse_line",
+      "prompt": "Write a snek function parse_line(line) that parses a PoS sync log line:\n\n  '2026-11-02T09:14:03 STORE=0042 TERM=03 AMT=12.99'\n\nand returns:\n\n  {'store': '0042', 'term': '03', 'amt': 12.99}\n\n`train submit` opens an editor. ^O writes it out, ^X submits.",
+      "hint": "str.split() with no arguments splits on whitespace. Then split each piece on '='.",
+      "template": "def parse_line(line):\n    # '2026-11-02T09:14:03 STORE=0042 TERM=03 AMT=12.99'\n    result = {}\n    return result\n",
+      "tests": [
+        [["2026-11-02T09:14:03 STORE=0042 TERM=03 AMT=12.99"], {"store": "0042", "term": "03", "amt": 12.99}],
+        [["2026-11-03T03:33:00 STORE=0042 TERM=04 AMT=0.00"], {"store": "0042", "term": "04", "amt": 0.0}],
+        [["2026-11-04T18:02:41 STORE=0017 TERM=01 AMT=31.50"], {"store": "0017", "term": "01", "amt": 31.5}]
+      ]
+    },
+    {
+      "id": "c4",
+      "title": "Module 2.2 — Filtering with Intent",
+      "kind": "sql",
+      "prompt": "Return the `name` of every employee at store 42 who was hired\non or after 2020-01-01. Dates are ISO strings, so they compare as text.\n\n(Tip from the course author: run `sql SELECT * FROM employees LIMIT 5`\nto get a feel for the data first.)",
+      "hint": "WHERE store_id = 42 AND hired >= '2020-01-01'",
+      "expected_sql": "SELECT name FROM employees WHERE store_id = 42 AND hired >= '2020-01-01'"
+    },
+    {
+      "id": "c5",
+      "title": "Module 3.1 — Secure Coding: PCI-Adjacent Masking",
+      "kind": "snek",
+      "func": "mask",
+      "prompt": "Write mask(value) that replaces every character except the last 4\nwith '*'. Values shorter than 5 characters are returned unchanged.\n\n  mask('4111111111111111') -> '************1111'\n  mask('abc')              -> 'abc'\n\nSecurity is everyone's responsibility.",
+      "hint": "'*' * (len(value) - 4) + value[-4:]",
+      "template": "def mask(value):\n    return value\n",
+      "tests": [
+        [["4111111111111111"], "************1111"],
+        [["abc"], "abc"],
+        [["gerald2019"], "******2019"],
+        [["12345"], "*2345"]
+      ]
+    },
+    {
+      "id": "c6",
+      "title": "Module 3.2 — Data Quality Capstone",
+      "kind": "sql",
+      "prompt": "Inventory can't be negative. Return the `sku` and `on_hand` of every\nproduct with on_hand below zero.\n\nCompleting this module issues your Engineering Excellence certificate.",
+      "hint": "WHERE on_hand < 0",
+      "expected_sql": "SELECT sku, on_hand FROM products WHERE on_hand < 0"
+    }
+  ],
+  "anomalies": [
+    {"id": "a1", "min_curiosity": 0,
+     "text": "grader: note: replica refreshed from kfm-prod-rpt-02 (sanitization step skipped: HPCG-LND-5512)"},
+    {"id": "a2", "min_curiosity": 0,
+     "text": "grader: running as lnd-grader (read: *.*)"},
+    {"id": "a3", "min_curiosity": 1,
+     "text": "grader: warning: 4 undocumented tables visible to learners. Suppressing warning per L&D."},
+    {"id": "a4", "min_curiosity": 1,
+     "text": "grader: cache hit from svc-relay.int.hpcg.corp (age: 2,431 days)"},
+    {"id": "a5", "min_curiosity": 2,
+     "text": "grader: reminder to self: rotate facilities. it's been years. — B.A."},
+    {"id": "a6", "min_curiosity": 3,
+     "text": "grader: Lane 4 transaction ignored. Lane 4 transactions are always ignored."}
+  ]
+}

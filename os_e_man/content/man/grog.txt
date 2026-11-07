@@ -1,0 +1,13 @@
+GROG(1)                    General Commands                    GROG(1)
+
+NAME
+     grog - HPCG's enterprise AI assistant (beta)
+
+SYNOPSIS
+     grog QUESTION
+
+DESCRIPTION
+     grog answers questions.
+
+BUGS
+     Confidently wrong. Will not stop.
