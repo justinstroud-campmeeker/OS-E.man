@@ -1,3 +1,5 @@
+<img width="160" height="302" alt="Seat" src="https://github.com/user-attachments/assets/bb5b8bfa-7f67-425f-b672-3267230eeac8" />
+
 # OS-E.man
 
 An idle-style terminal game. You are Pat Dunn, a DevOps consultant at a faceless
