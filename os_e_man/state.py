@@ -64,6 +64,8 @@ class GameState:
     stuck: dict[str, int] = field(default_factory=dict)        # route id -> nights open
     pending_glimpse: str = ""                                  # a Board hint, shown next command
     badge: dict = field(default_factory=dict)                  # door -> locked/unlocked, revokes
+    next_unlock_t: int = 0                                     # when the next package installs itself
+    at_jobs: list[dict] = field(default_factory=list)          # {n, t, line}
     history: list[str] = field(default_factory=list)
     version: int = SAVE_VERSION
 

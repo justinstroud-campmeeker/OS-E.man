@@ -39,6 +39,8 @@ class Omens:
         st = self.state
         st.omens_fired.append(o["id"])
         exposure = o.get("exposure", 0)
+        if self.game.quiet:
+            exposure //= 2
         self.game.bump(mystique=o.get("mystique", 0), exposure=exposure)
         for r in o.get("reactions", []):
             self.game.schedule(r["delay"], r["channel"], r["who"], r["text"])

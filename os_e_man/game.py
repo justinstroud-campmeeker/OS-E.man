@@ -13,6 +13,7 @@ from . import content
 from .events import Events
 from .glimpses import Glimpses
 from .levers import Levers
+from .unlocks import Unlocks
 from .omens import Omens
 from .state import DAY_END, DAY_START, GameState
 from .training.engine import Training
@@ -81,6 +82,8 @@ class Game:
         self.omens = Omens(self)
         self.glimpses = Glimpses(self)
         self.levers = Levers(self)
+        self.unlocks = Unlocks(self)
+        self.quiet = False                # --quiet: halves exposure from omens
         self.curiosity_triggers: dict[str, int] = content.load("curiosity.json")
         self.ticker_new: list[dict] = []
         self.requests: list = []          # EditRequest | "clear" | "quit"
@@ -194,6 +197,7 @@ class Game:
             if self.state.minute_of_day >= DAY_END:
                 self._end_of_day(out)
             self.events.check(out)
+            self.unlocks.check(out)
         if self.state.t - self._last_save_t >= AUTOSAVE_EVERY:
             self.save()
         return out.items

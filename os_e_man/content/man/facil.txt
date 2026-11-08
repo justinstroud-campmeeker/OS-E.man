@@ -21,3 +21,6 @@ DESCRIPTION
 NOTES
      People notice when the office responds to them. They notice more when
      it responds to something they said to only one person.
+
+OPTIONS
+     --quiet   fewer people notice. Also for badge. (If installed.)

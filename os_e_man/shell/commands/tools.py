@@ -95,6 +95,16 @@ DOORS = ["LOBBY-EAST", "3F-KITCHEN", "3F-AQUARIUM", "3F-BIGCONF", "SERVER-RM", "
 @command("badge", "Tallyho badge console (badge log, badge door, badge revoke, badge restore)",
          requires="badging")
 def badge(game, args, out):
+    if "--quiet" in args:
+        if not game.unlocks.has("quiet"):
+            out("badge: unrecognized option '--quiet'", "err")
+            return
+        game.quiet = True
+        try:
+            badge(game, [a for a in args if a != "--quiet"], out)
+        finally:
+            game.quiet = False
+        return
     st, b = game.state, game.state.badge
     doors = b.setdefault("doors", {})
     revoked = b.setdefault("revoked", [])
@@ -141,6 +151,65 @@ def badge(game, args, out):
         game.omens.apply("badge", f"{sub} {who}", out)
         return
     out("usage: badge [status] | badge log | badge door DOOR lock|unlock|normal | badge revoke|restore WHO", "err")
+
+
+# -------------------------------------------------------------------- unlocked tools
+@command("finger", "user information lookup (finger WHO)", requires="u:finger")
+def finger(game, args, out):
+    if not args:
+        out("usage: finger WHO   e.g. finger kev", "err")
+        return
+    key = args[0].lower()
+    ev = game.events
+    who = next((k for k, p in ev.people.items() if key in (k, p["handle"].lower())), None)
+    if who is None:
+        out(f"finger: {args[0]}: no such user.", "err")
+        return
+    p = ev.people[who]
+    said = [e for e in game.state.ticker_log if e["who"] == who]
+    out(f"Login: {p['handle']:<20} Name: {p.get('name', p['handle'])}", "head")
+    out(f"Role:  {p.get('role', '')}")
+    if said:
+        e = said[-1]
+        t = e["t"] % 1440
+        out(f"Last seen {e['channel']} at {t // 60:02d}:{t % 60:02d}: \"{e['text']}\"")
+    else:
+        out("Never logged in.", "dim")
+    revoked = who in game.state.badge.get("revoked", [])
+    out("Plan:  " + ("waiting in the lobby." if revoked else "(no .plan file. it's all in their head.)"), "dim")
+    game.poke(f"finger:{who}")
+
+
+@command("at", "run a command later (at HH:MM COMMAND, at -l, at -r N)", raw=True, requires="u:at")
+def at(game, args, out):
+    import re
+    st = game.state
+    line = (args[0] if args else "").strip()
+    if line in ("", "-l"):
+        if not st.at_jobs:
+            out("at: no jobs queued.", "dim")
+        for j in st.at_jobs:
+            t = j["t"] % 1440
+            out(f"{j['n']:>3}  day {j['t'] // 1440 + 1} {t // 60:02d}:{t % 60:02d}  {j['line']}")
+        return
+    m = re.match(r"^-r\s+(\d+)$", line)
+    if m:
+        n = int(m.group(1))
+        before = len(st.at_jobs)
+        st.at_jobs = [j for j in st.at_jobs if j["n"] != n]
+        out("at: job removed." if len(st.at_jobs) < before else f"at: no job {n}", "dim")
+        return
+    m = re.match(r"^([01]\d|2[0-3]):([0-5]\d)\s+(.+)$", line)
+    if not m or m.group(3).split()[0] == "at":
+        out("usage: at HH:MM COMMAND | at -l | at -r N", "err")
+        return
+    when = (st.day - 1) * 1440 + int(m.group(1)) * 60 + int(m.group(2))
+    if when <= st.t:
+        when += 1440
+    n = max([j["n"] for j in st.at_jobs], default=0) + 1
+    st.at_jobs.append({"n": n, "t": when, "line": m.group(3)})
+    t = when % 1440
+    out(f"job {n} at day {when // 1440 + 1} {t // 60:02d}:{t % 60:02d}", "ok")
 
 
 # -------------------------------------------------------------------- train
@@ -275,8 +344,27 @@ def snek(game, args, out):
 
 
 # ---------------------------------------------------------------- dingaling
-@command("dingaling", "company chat (read-only, pending onboarding since 2021)")
+_POST_REACTIONS = [
+    ("kev", "who posted that. there's no name on it. how is there no name on it"),
+    ("priya", "the message has no author field. not empty. absent."),
+    ("doug", "whoever posted that: agreed, actually. but please use your account."),
+    ("brenda", "it wasn't me. I'm saying that before anyone asks."),
+]
+
+
+@command("dingaling", "company chat (dingaling, dingaling post #channel TEXT once onboarded)")
 def dingaling(game, args, out):
+    if args and args[0] == "post" and game.unlocks.has("dingaling-post"):
+        if len(args) < 3 or not args[1].startswith("#"):
+            out("usage: dingaling post #channel TEXT", "err")
+            return
+        text = " ".join(args[2:])
+        game.post(args[1], "(unattributed)", text)
+        who, line = random.choice(_POST_REACTIONS)
+        game.schedule(random.randint(3, 12), args[1], who, line)
+        game.bump(mystique=1, exposure=1)
+        game.poke("dingaling:post")
+        return
     if args and args[0] in ("send", "post", "say", "msg"):
         out("dingaling: sending is disabled for your account (status: read-only, pending onboarding, since 2021)", "err")
         return
@@ -331,6 +419,17 @@ def _order_no(game) -> str:
 @command("facil", "Office Services facilities portal", requires="facilities")
 def facil(game, args, out):
     if not _need_facilities(game, out):
+        return
+    if "--quiet" in args:
+        if not game.unlocks.has("quiet"):
+            out("facil: unrecognized option '--quiet'", "err")
+            return
+        args = [a for a in args if a != "--quiet"]
+        game.quiet = True
+        try:
+            facil(game, args, out)
+        finally:
+            game.quiet = False
         return
     f = game.state.facil
     sub = args[0] if args else "status"

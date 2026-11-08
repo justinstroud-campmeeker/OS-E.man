@@ -1,0 +1,11 @@
+FINGER(1)                  General Commands                  FINGER(1)
+
+NAME
+     finger - user information lookup
+
+SYNOPSIS
+     finger WHO         login, role, last seen, plan
+
+DESCRIPTION
+     finger was removed from every system in 1999 for being too
+     forthcoming. This one was not.

@@ -12,6 +12,10 @@ commands, major (`1.0.0`) when the game is considered released.
 
 ## [Unreleased]
 
+### Added
+- Unlocks: once a game day a new tool installs itself (`finger`, `at`, `dingaling post`,
+  `--quiet` for `facil`/`badge`). Content in `content/unlocks.json`.
+
 ## [0.0.1] - 2026-11-07
 First versioned alpha.
 

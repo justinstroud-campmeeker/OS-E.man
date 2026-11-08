@@ -1,0 +1,6 @@
+[
+  {"id": "finger", "notice": "pkg: finger 1.0-lsb installed in /usr/local/bin (maintainer: none). See `man finger`."},
+  {"id": "at", "notice": "pkg: at 3.1-lsb installed (maintainer: none). Jobs run whether or not you are watching. See `man at`."},
+  {"id": "dingaling-post", "notice": "dingaling: your onboarding has been completed (approver: none). You can now `dingaling post`. Posts are unattributed until onboarding is reviewed."},
+  {"id": "quiet", "requires": {"flag": "got_facilities"}, "notice": "pkg: facil and badge updated: new flag --quiet (changelog: \"fewer people will notice\"). See `man facil`."}
+]
