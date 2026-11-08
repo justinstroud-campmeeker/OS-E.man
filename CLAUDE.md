@@ -100,8 +100,9 @@ The game is fiction, and it runs entirely inside its own simulated operating sys
 - Run: `python -m os_e_man` (connects, auto-boots the world). `python -m os_e_man status|stop`.
 - Test: `python -m pytest`. Keep the suite green, and add tests with each change.
 - Version: semver, single source `os_e_man/__init__.py` (`pyproject.toml` reads it). Bump it
-  and add a `CHANGELOG.md` entry with each release: patch for fixes and content, minor for
-  new systems.
+  and add a `CHANGELOG.md` entry with each release. Stay on `0.0.x` (patch bumps, even for
+  new systems) until the steady state where the player can fully control their coworkers'
+  lives; that is `0.1.0`. After that: patch for fixes and content, minor for new systems.
 - Runtime files: `%APPDATA%\OS-E.man\` (save.json, server.json, server.log). The user has a
   real save in progress, so don't break save compatibility; migrate instead. Backup:
   `save.v1-backup.json`.

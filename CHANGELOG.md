@@ -7,10 +7,14 @@ The version lives in one place: `os_e_man/__init__.py` (`__version__`); `pyproje
 reads it. While the version is `0.x`, anything may change between minor versions. Saves
 are still kept compatible (migrated, never broken), as a project rule.
 
-How to bump: patch (`0.0.x`) for fixes and content, minor (`0.x.0`) for new systems or
+How to bump: while in early alpha, every release is a patch (`0.0.x`), new systems included.
+The first minor (`0.1.0`) comes at a steady state: the player can fully control their
+coworkers' working lives. After that: patch for fixes and content, minor for new systems or
 commands, major (`1.0.0`) when the game is considered released.
 
 ## [Unreleased]
+
+## [0.0.2] - 2026-11-08
 
 ### Added
 - Unlocks: once a game day a new tool installs itself (`finger`, `at`, `dingaling post`,
