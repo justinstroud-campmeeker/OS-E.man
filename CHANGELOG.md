@@ -14,6 +14,9 @@ commands, major (`1.0.0`) when the game is considered released.
 
 ## [Unreleased]
 
+### Changed
+- The Board now nudges players stuck on the facilities password toward the newsletters.
+
 ## [0.0.2] - 2026-11-08
 
 ### Added

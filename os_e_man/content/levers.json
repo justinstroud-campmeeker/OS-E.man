@@ -7,6 +7,11 @@
     {
       "id": "fac_password", "rung": "facilities",
       "secret": "gerald2019",
+      "hints": [
+        {"kind": "file", "path": "/tmp/.lsb-0019",
+         "text": "Item 2. The lobby has had one resident since 2019. He has never been asked for a password.\nHe was announced, as everything is announced: quarterly, and to no one in particular.\n"},
+        {"kind": "glimpse", "text": "ls /home/shared/newsletter"}
+      ],
       "burn": "su: facilities: account password was rotated (IT-SEC-0042)"
     },
     {

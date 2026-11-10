@@ -137,3 +137,10 @@ def test_old_lockout_saves_migrate(tmp_path):
     assert g.levers.is_open("fac_sticky")
     g.tick(1)                                            # ghosts appear on the next check
     assert "halcyon70" in sh(g, "cat /home/shared/scans/scan_0193.txt")
+
+
+def test_gerald_nudge_points_at_newsletters(game):
+    game.levers.nudge()
+    assert "since 2019" in game.state.user_files["/tmp/.lsb-0019"]
+    game.levers.nudge()
+    assert game.state.pending_glimpse == "ls /home/shared/newsletter"
