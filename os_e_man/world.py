@@ -38,6 +38,7 @@ MOODS = ("normal", "uneasy", "afraid")
 WHEN_INT = ("day", "curiosity", "mystique", "exposure",
             "curiosity_below", "mystique_below", "exposure_below")
 MAX_THREADS = 8
+MAX_FACTS = 12                      # per storyline, newest kept
 WHEN_STR = ("flag", "not_flag", "done", "not_done")
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 ID_RE = re.compile(r"^[A-Za-z0-9_.:~-]{1,64}$")
@@ -174,7 +175,10 @@ class World:
         self.dangling -= {b["flag"] for b in pack.get("beats", []) if b.get("flag")}
         self.anomalies.extend(pack.get("drift", []))
         for t in pack.get("threads", []):
-            self.threads[t["id"]] = {**t, "day": pack.get("for_day", pack.get("applied_day", 0))}
+            old = self.threads.get(t["id"], {}).get("facts", [])
+            facts = old + [f for f in t.get("facts", []) if f not in old]
+            self.threads[t["id"]] = {**t, "facts": facts[-MAX_FACTS:],
+                                     "day": pack.get("for_day", pack.get("applied_day", 0))}
         if isinstance(pack.get("for_day"), int):
             self.written[pack["for_day"]] = pack["id"]
         self.notes[pack["id"]] = pack.get("note", "")
@@ -436,7 +440,12 @@ class _Checker:
             where = f"thread #{i + 1}"
             if not isinstance(t, dict) or not self.keep(t, where):
                 continue
-            t = {k: t[k] for k in ("id", "title", "state", "next") if k in t}
+            t = {k: t[k] for k in ("id", "title", "state", "next", "facts") if k in t}
+            facts = t.pop("facts", [])
+            if isinstance(facts, list):
+                facts = [f.strip()[:LIMITS["line"]] for f in facts[:5] if isinstance(f, str) and f.strip()]
+                if facts:
+                    t["facts"] = facts
             if not isinstance(t.get("id"), str) or not ID_RE.match(t["id"]):
                 self.err(f"{where}: missing or malformed id")
                 continue

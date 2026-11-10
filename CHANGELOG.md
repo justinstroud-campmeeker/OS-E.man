@@ -14,7 +14,15 @@ commands, major (`1.0.0`) when the game is considered released.
 
 ## [Unreleased]
 
+### Fixed
+- Director with LM Studio: no more 400s; JSON mode is dropped when a server doesn't support it.
+- `--model local` sends a JSON schema per task (structured output), so models that can't
+  write JSON on their own still produce valid packs. Local timeout raised to 300s.
+
 ### Changed
+- Storylines keep a ledger of established facts (names, numbers, times, IDs). The director
+  is shown them every day and told never to contradict them, so plots stay consistent.
+- The director's voice allows a little SCP-style weirdness (it said "not horror" before).
 - The Board now nudges players stuck on the facilities password toward the newsletters.
 
 ## [0.0.2] - 2026-11-08

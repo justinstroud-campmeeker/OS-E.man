@@ -105,7 +105,8 @@ document by someone who doesn't know they're in a story: chat, mail, notices.
   no exclamation marks.
 - Ticket numbers and tracking IDs are welcome (ITSD-, HPCG-, FAC-).
 - Each day has one small thing that is slightly wrong (a label, a booking, a record, a
-  number) and nobody can explain. Mundane, specific, never resolved. Not sci-fi, not horror.
+  number) and nobody can explain. Mundane, specific, never resolved. A little SCP-style
+  weirdness is welcome, logged as if it were routine paperwork. Not sci-fi.
 - Chat is chat: short, mostly lowercase, typed by tired people. Match each person's voice,
   but never reuse their sample lines or anything in recent chat: anything already said is
   thrown away.
@@ -119,7 +120,7 @@ Reply with JSON only."""
 SCHEMAS = {
     "plan": '{"notes": {"chatter": "one line", "beats": "one line", "emails": "one line"},'
             ' "threads": [{"id": "short-kebab-id", "title": "what it is", "state": "open|closed",'
-            ' "next": "where it goes next"}]}',
+            ' "next": "where it goes next", "facts": ["a concrete detail established today"]}]}',
     "chatter": '{"normal": [{"channel": "#dunmore-general", "who": "<person key>", "text": "..."}],'
                ' "uneasy": [...], "afraid": [...]}',
     "beats": '{"beats": [{"id": "d<D>_<short>", "when": {"day": D, "at": "HH:MM", ...branch keys},'
@@ -128,6 +129,32 @@ SCHEMAS = {
               ' "delay": 0, "from": "<handle>@hpcg.corp", "subject": "...", "body": "..."}]}',
 }
 
+
+# The same shapes as JSON Schema, for servers that constrain output to a schema (LM Studio's
+# structured output). The grammar forces valid JSON even from models that can't write it.
+_S, _I = {"type": "string"}, {"type": "integer"}
+_WHEN = {"type": "object", "properties": {"day": _I, "at": _S}, "required": ["day", "at"]}
+_LINE = {"type": "object", "properties": {"channel": _S, "who": _S, "text": _S},
+         "required": ["channel", "who", "text"]}
+
+
+def _arr(item, lo=1):
+    return {"type": "array", "items": item, "minItems": lo}
+
+
+def _obj(props, req=None):
+    return {"type": "object", "properties": props, "required": req or list(props)}
+
+
+JSON_SCHEMAS = {
+    "plan": _obj({"notes": _obj({"chatter": _S, "beats": _S, "emails": _S}),
+                  "threads": _arr(_obj({"id": _S, "title": _S, "state": {"enum": ["open", "closed"]},
+                                        "next": _S, "facts": _arr(_S)}))}),
+    "chatter": _obj({"normal": _arr(_LINE), "uneasy": _arr(_LINE), "afraid": _arr(_LINE)}),
+    "beats": _obj({"beats": _arr(_obj({"id": _S, "when": _WHEN, "channel": _S, "who": _S, "text": _S}), 2)}),
+    "emails": _obj({"emails": _arr(_obj({"id": _S, "when": _WHEN, "delay": _I, "from": _S,
+                                         "subject": _S, "body": _S}))}),
+}
 
 def _mood(m: dict) -> str:
     return "afraid" if m.get("mystique", 0) >= 6 else "uneasy" if m.get("mystique", 0) >= 3 else "normal"
@@ -142,7 +169,9 @@ def _situation(digest: dict, day: int) -> str:
     chat = "\n".join(f"  {c['channel']} <{c['who']}> {c['text']}" for c in digest.get("recent_chat", [])[-8:])
     mail = "\n".join(f"  {e['from']}: {e['subject']}" for e in digest.get("inbox", [])[-5:])
     threads = "\n".join(f"  - {t['id']}: {t.get('title', '')} (last seen day {t.get('day', '?')}; "
-                        f"next: {t.get('next', '?')})" for t in digest.get("threads", []))
+                        f"next: {t.get('next', '?')})"
+                        + "".join(f"\n      fact: {f}" for f in t.get("facts", []))
+                        for t in digest.get("threads", []))
     written = "\n".join(f"  day {d}: {note or '(no note)'}"
                         for d, note in list(digest.get("written_days", {}).items())[-5:])
     return (f"You are writing day {day}. In the office it is now day {digest.get('day')}, "
@@ -184,6 +213,9 @@ def plan_prompt(digest: dict, day: int) -> str:
             f"new, concrete development (a second instance, a new number, a reply that makes it "
             f"worse); it never just waits for tomorrow. Return every storyline you touched in "
             f"\"threads\", with its new state and where it goes next.\n"
+            f"The facts under a storyline are canon: never contradict them, and reuse the same "
+            f"names, numbers, times and IDs. Put each new concrete detail you introduce today in "
+            f"that storyline's \"facts\" (short, one detail each).\n"
             f"Reply as: {SCHEMAS['plan']}")
 
 
@@ -470,7 +502,8 @@ class ChatModel:
     includes the digest (fictional world state and the player's recent in-game commands)."""
 
     def __init__(self, name: str, base_url: str, model: str, api_key: str | None = None,
-                 temperature: float = 0.9, timeout: float = 90.0, client=None, attempts: int = 6):
+                 temperature: float = 0.9, timeout: float = 90.0, client=None, attempts: int = 6,
+                 structured: bool = False):
         import httpx
         self.attempts = attempts
         self.name = f"{name}:{model}"
@@ -479,12 +512,18 @@ class ChatModel:
         self.temperature = temperature
         self.headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         self.client = client or httpx.Client(timeout=timeout)
+        self.json_mode = True
+        self.structured = structured     # send a JSON schema per task (LM Studio)
 
     def complete(self, task: str, prompt: str) -> str:
         import time
         body = {"model": self.model, "temperature": self.temperature,
-                "messages": [{"role": "user", "content": prompt}],
-                "response_format": {"type": "json_object"}}
+                "messages": [{"role": "user", "content": prompt}]}
+        if self.structured and task in JSON_SCHEMAS:
+            body["response_format"] = {"type": "json_schema", "json_schema": {
+                "name": task, "strict": True, "schema": JSON_SCHEMAS[task]}}
+        elif self.json_mode:
+            body["response_format"] = {"type": "json_object"}
         for attempt in range(self.attempts):
             r = self.client.post(self.url, json=body, headers=self.headers)
             if r.status_code == 429 or r.status_code >= 500:     # rate limit / hiccup: wait, retry
@@ -494,8 +533,12 @@ class ChatModel:
                     wait = 5 * (attempt + 1)
                 time.sleep(min(wait, 90))                         # free tiers count tokens per minute
                 continue
-            if r.status_code == 400 and "json_validate_failed" in r.text and "response_format" in body:
-                body.pop("response_format")                       # let it talk; extract_json copes
+            if r.status_code == 400 and "response_format" in body:
+                # Groq: the reply wasn't valid JSON. LM Studio and others: json_object isn't
+                # supported at all, so stop asking. Either way, let it talk; extract_json copes.
+                body.pop("response_format")
+                if "json_validate_failed" not in r.text:
+                    self.json_mode = self.structured = False
                 continue
             r.raise_for_status()
             return r.json()["choices"][0]["message"].get("content") or ""
@@ -520,5 +563,5 @@ def make_model(name: str, model_name: str | None = None, base_url: str | None = 
     if name == "local":
         if not model_name:
             raise SystemExit("os_e_man: --model local needs --model-name (whatever the server has loaded).")
-        return ChatModel("local", base_url or LOCAL_URL, model_name)
+        return ChatModel("local", base_url or LOCAL_URL, model_name, timeout=300, structured=True)
     raise SystemExit(f"os_e_man: unknown director model {name!r} (have: fake, groq, local)")

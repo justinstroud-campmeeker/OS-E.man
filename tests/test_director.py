@@ -205,6 +205,39 @@ def test_chat_model_retries_rate_limits_and_json_failures():
     assert "response_format" in calls[1] and "response_format" not in calls[2]
 
 
+def test_chat_model_stops_json_mode_when_unsupported():
+    import httpx
+    calls = []
+
+    def handler(req):
+        body = json.loads(req.content)
+        calls.append(body)
+        if "response_format" in body:   # LM Studio: only json_schema or text
+            return httpx.Response(400, text='{"error": "response_format.type must be json_schema or text"}')
+        return _reply('{"ok": 1}')
+
+    m = _chat_model(handler)
+    assert m.complete("plan", "p") == '{"ok": 1}'
+    assert m.complete("beats", "p") == '{"ok": 1}'
+    assert len(calls) == 3 and "response_format" not in calls[2]
+
+
+def test_local_model_sends_a_schema_per_task():
+    calls = []
+
+    def handler(req):
+        calls.append(json.loads(req.content))
+        return _reply('{"ok": 1}')
+
+    from os_e_man.director import ChatModel
+    import httpx
+    m = ChatModel("local", "http://x/v1", "m", client=httpx.Client(transport=httpx.MockTransport(handler)),
+                  structured=True)
+    m.complete("beats", "p")
+    rf = calls[0]["response_format"]
+    assert rf["type"] == "json_schema" and "beats" in rf["json_schema"]["schema"]["properties"]
+
+
 def test_a_chat_model_through_the_whole_loop(game):
     fake = FakeModel()
 
@@ -359,3 +392,17 @@ def test_lines_already_said_are_filed_once(game):
     rep = game.world.apply({"id": "t2", "beats": [{"id": "b", "channel": "dm", "who": "kev",
                                                     "text": "a new thing"}]})
     assert not rep.ok                                   # nothing left that hasn't been said
+
+
+def test_storyline_facts_accumulate_and_reach_the_prompt(game):
+    from os_e_man.director import plan_prompt
+    w = game.world
+    for day, fact in ((5, "the hours were approved at 03:12"), (6, "approver shown as doug")):
+        w.apply({"id": f"dir-d{day:03d}", "for_day": day, "threads": [
+            {"id": "rtl-hours", "title": "phantom hours", "state": "open", "next": "more",
+             "facts": [fact]}],
+            "beats": [{"id": f"d{day}_x", "when": {"day": day, "at": "10:00"}, "channel": "#dunmore-general",
+                       "who": "kev", "text": f"day {day} again"}]})
+    assert w.threads["rtl-hours"]["facts"] == ["the hours were approved at 03:12", "approver shown as doug"]
+    p = plan_prompt({"threads": list(w.threads.values())}, 7)
+    assert "fact: approver shown as doug" in p and "never contradict" in p
