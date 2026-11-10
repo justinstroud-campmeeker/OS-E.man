@@ -38,6 +38,8 @@ MOODS = ("normal", "uneasy", "afraid")
 WHEN_INT = ("day", "curiosity", "mystique", "exposure",
             "curiosity_below", "mystique_below", "exposure_below")
 MAX_THREADS = 8
+MAX_EMAILS = 4                      # per pack (one day)
+MIN_ARC = 3                         # days a storyline runs before it may close
 MAX_FACTS = 12                      # per storyline, newest kept
 WHEN_STR = ("flag", "not_flag", "done", "not_done")
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
@@ -64,6 +66,20 @@ def _code_flags() -> set[str]:
 def said(text: str) -> str:
     """A chat line, normalised for 'has anyone said this already'."""
     return re.sub(r"[\W_]+", " ", str(text).lower()).strip()
+
+
+NEAR_COPY = 0.5      # share of the shorter line's words found in an earlier line
+NEAR_MIN_WORDS = 5   # shorter lines than this are only checked for exact copies
+
+
+def words(text: str) -> frozenset[str]:
+    """The words of a line that carry meaning: 4+ letters, and any number."""
+    return frozenset(w for w in said(text).split() if len(w) >= 4 or w.isdigit())
+
+
+def near_copy(a: frozenset, b: frozenset) -> bool:
+    small = min(len(a), len(b))
+    return small >= NEAR_MIN_WORDS and len(a & b) / small >= NEAR_COPY
 
 
 def _lines(beats, chatter) -> set[str]:
@@ -130,6 +146,8 @@ class World:
         self.canon_people = set(self.people)
         self.known_flags = _code_flags() | _content_flags(self.emails, self.beats, self.omens)
         self.lines = _lines(self.beats, self.chatter)   # everything anyone has been written saying
+        ex = content.load("director_examples.json")   # the director's tone examples: never to be copied
+        self.lines |= {said(t) for t in ex["chat"]} | {said(e["body"]) for e in ex["emails"]}
         if folder and folder.is_dir():
             for p in sorted(folder.glob("*.json")):
                 try:
@@ -175,10 +193,15 @@ class World:
         self.dangling -= {b["flag"] for b in pack.get("beats", []) if b.get("flag")}
         self.anomalies.extend(pack.get("drift", []))
         for t in pack.get("threads", []):
-            old = self.threads.get(t["id"], {}).get("facts", [])
+            prev = self.threads.get(t["id"], {})
+            old = prev.get("facts", [])
             facts = old + [f for f in t.get("facts", []) if f not in old]
-            self.threads[t["id"]] = {**t, "facts": facts[-MAX_FACTS:],
-                                     "day": pack.get("for_day", pack.get("applied_day", 0))}
+            day = pack.get("for_day", pack.get("applied_day", 0))
+            since = prev.get("since", day)
+            if (t.get("state") == "closed" and isinstance(day, int) and isinstance(since, int)
+                    and day - since < MIN_ARC - 1):
+                t = {**t, "state": "open"}          # too soon: a storyline gets at least MIN_ARC days
+            self.threads[t["id"]] = {**t, "facts": facts[-MAX_FACTS:], "day": day, "since": since}
         if isinstance(pack.get("for_day"), int):
             self.written[pack["for_day"]] = pack["id"]
         self.notes[pack["id"]] = pack.get("note", "")
@@ -238,6 +261,7 @@ class World:
             "anomalies": self.anomalies[-10:],
             "pokeable": sorted(k for k in game.curiosity_triggers if not st.has(f"poke:{k}")),
             "threads": [t for t in self.threads.values() if t.get("state") != "closed"][-MAX_THREADS:],
+            "closed_threads": [t["title"] for t in self.threads.values() if t.get("state") == "closed"][-6:],
             "written_days": {str(d): self.notes.get(pid, "") for d, pid in sorted(self.written.items())},
         }
 
@@ -305,6 +329,10 @@ class _Checker:
         if k in self.w.lines or k in self.said:
             self.drift(f"{where} repeated something already said; the duplicate was not filed")
             return False
+        w = words(text)
+        if any(near_copy(w, words(line)) for line in self.w.lines):   # not this pack: branch pairs are alike
+            self.drift(f"{where} repeated something already said, nearly word for word; not filed")
+            return False
         self.said.add(k)
         return True
 
@@ -341,6 +369,32 @@ class _Checker:
             self.drift(f"record {i} was issued twice; the second copy is filed as {new}")
         self.ids.add(item["id"])
         return True
+
+    def fix_who(self, d: dict):
+        """Absorb near-misses: "<kev>", "Kev", "Kev Marsh", "kmarsh" all mean kev."""
+        who = d.get("who")
+        if not isinstance(who, str):
+            return who
+        w = who.strip().strip("<>@ ").lower()
+        for key, p in self.w.people.items():
+            names = {key, str(p.get("handle", "")).lower(), str(p.get("name", "")).lower()}
+            first = str(p.get("name", "")).split(" ")[0].lower()
+            if w in names or (first and w == first):
+                w = key
+                break
+        w = re.sub(r"[^a-z0-9_-]", "", w.replace(" ", "-"))
+        if w:
+            d["who"] = w
+        p = self.w.people.get(d["who"], {})
+        names = {d["who"], str(p.get("handle", "")).lower(), str(p.get("name", "")).split(" ")[0].lower()}
+        text = d.get("text")
+        if isinstance(text, str):                            # "d49_01 the printer..." -> "the printer..."
+            text = d["text"] = re.sub(r"^\s*d\d+_[\w-]*[:.)\s]+", "", text)
+        if isinstance(text, str) and ":" in text[:24]:      # "kevin: found another pod" -> "found another pod"
+            head, rest = text.split(":", 1)
+            if head.strip().lower() in names - {""} and rest.strip():
+                d["text"] = rest.strip()
+        return d["who"]
 
     def who(self, who, where: str) -> bool:
         if not isinstance(who, str) or not ID_RE.match(who):
@@ -471,15 +525,26 @@ class _Checker:
                 continue
             self.people[key] = {"handle": p["handle"], "name": p["name"], "role": p.get("role", "")}
 
-        emails = []
+        emails, seen_mail = [], set()
         for i, e in enumerate(self.section(raw, "emails", list)):
             where = f"email #{i + 1}"
             if not isinstance(e, dict) or not self.keep(e, where):
                 continue
             e = {k: e[k] for k in ("id", "when", "delay", "from", "subject", "body", "flag_on_deliver") if k in e}
+            if isinstance(e.get("from"), str):
+                e["from"] = re.sub(r"[<>\s]", "", e["from"])          # "<doug>@hpcg.corp" -> doug@...
             if (self.new_id(e, where) and self.text(e, "from", "line", where)
                     and self.text(e, "subject", "subject", where) and self.text(e, "body", "body", where)
                     and self.when(e, where) and self.delay(e, "delay", where)):
+                sig = (e["from"].lower(), e["subject"].strip().lower(),   # branch pairs differ in "when"
+                       json.dumps({k: v for k, v in e["when"].items() if k != "at"}, sort_keys=True))
+                if sig in seen_mail:
+                    self.err(f"{where}: duplicate of an email already in this pack")
+                    continue
+                if len(emails) >= MAX_EMAILS:
+                    self.err(f"{where}: more than {MAX_EMAILS} emails in one day")
+                    continue
+                seen_mail.add(sig)
                 if e.get("flag_on_deliver") is not None:
                     if not isinstance(e["flag_on_deliver"], str):
                         del e["flag_on_deliver"]
@@ -494,7 +559,7 @@ class _Checker:
                 continue
             b = {k: b[k] for k in ("id", "when", "channel", "who", "text", "flag") if k in b}
             if (self.new_id(b, where) and self.channel(b.get("channel"), where)
-                    and self.who(b.get("who"), where) and self.text(b, "text", "text", where)
+                    and self.who(self.fix_who(b), where) and self.text(b, "text", "text", where)
                     and self.when(b, where) and self.fresh(b["text"], where)):
                 if isinstance(b.get("flag"), str):
                     self.flags_set.add(b["flag"])
@@ -516,7 +581,7 @@ class _Checker:
                 if not isinstance(c, dict) or not self.keep(c, where):
                     continue
                 c = {k: c[k] for k in ("channel", "who", "text") if k in c}
-                if (self.channel(c.get("channel"), where) and self.who(c.get("who"), where)
+                if (self.channel(c.get("channel"), where) and self.who(self.fix_who(c), where)
                         and self.text(c, "text", "text", where) and self.fresh(c["text"], where)):
                     chatter.setdefault(target, []).append(c)
 
@@ -554,7 +619,7 @@ class _Checker:
                     continue
                 r = {k: r[k] for k in ("delay", "channel", "who", "text") if k in r}
                 if (self.delay(r, "delay", rw, cap=1440) and self.channel(r.get("channel"), rw)
-                        and self.who(r.get("who"), rw) and self.text(r, "text", "text", rw)):
+                        and self.who(self.fix_who(r), rw) and self.text(r, "text", "text", rw)):
                     reactions.append(r)
             o["reactions"] = reactions
             if isinstance(o.get("requires_flag"), str):

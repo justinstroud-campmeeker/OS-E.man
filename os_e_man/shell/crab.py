@@ -31,7 +31,7 @@ def command(name: str, summary: str, raw: bool = False, hidden: bool = False,
 
 
 def _load_commands() -> None:
-    from .commands import fs, meta, net, tools  # noqa: F401  (registers commands)
+    from .commands import floor, fs, meta, net, tools  # noqa: F401  (registers commands)
 
 
 def available(game) -> list[Command]:

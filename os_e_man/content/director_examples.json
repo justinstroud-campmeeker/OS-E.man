@@ -1,0 +1,29 @@
+{
+  "_comment": "Tone examples shown to the director's writers, a few at a time. Never used in the game itself. Add freely; keep them deadpan, specific and unexplained.",
+  "chat": [
+    "kitchen fridge has a note on it, DO NOT RESTOCK, in brenda's handwriting. brenda says she didn't write it. it's her handwriting",
+    "anyone else have a 07:00 meeting called 'the count' in their calendar. organiser field is blank. it's recurring until 2031",
+    "the 3rd floor phone rang again. I picked up. it was our own hold music",
+    "lift went to 5 again. we have 4 floors. doors opened onto carpet. I didn't get out",
+    "can whoever keeps logging into wks-0409 stop. that desk was removed in march",
+    "badge log says I left at 02:14. I was asleep. my watch agrees I was asleep",
+    "found a sticky note in printer tray 2: 'it prints what it wants on tuesdays'. today is tuesday",
+    "the chair at the end of row C is warm every morning. nobody sits there. facilities says it's the radiator. there's no radiator",
+    "ok who moved all the mugs so the handles face the server room",
+    "the fire drill list has 32 names. we're 31. the extra one is ticked as accounted for",
+    "boiler room is booked every day at 03:00 under 'maintenance'. maintenance says they don't book rooms",
+    "if the kitchen tap runs warm then cold then warm again just leave it. I'm told that's normal here"
+  ],
+  "emails": [
+    {"subject": "Reminder: Orion is not bookable after 16:40",
+     "body": "Hi all,\n\nA reminder that Orion is not to be booked after 16:40. This has always been the policy.\n\nIf you find a booking after 16:40 in your name, please do not attend it.\n\nThanks,\nOffice Services"},
+    {"subject": "FAC-2291 closed: no fault found",
+     "body": "The sound reported from the ceiling void above row C has been investigated. The void is 11 cm deep and contains cabling only.\n\nThe sound was recorded for reference and is attached. Please do not play the attachment at your desk.\n\nFacilities"},
+    {"subject": "Lost property, kitchen, level 3",
+     "body": "Unclaimed this week:\n- one mug (HPCG Summit 2014)\n- one umbrella, still wet\n- one staff badge, photo blank, issued 1998, the year before the building opened\n\nItems not collected by Friday will be kept."},
+    {"subject": "Headcount Q4: complete",
+     "body": "Thank you for completing the quarterly headcount. Dunmore has 31 staff.\n\nPlease do not recount.\n\nPeople Operations"},
+    {"subject": "ITSD-8812: printer P-22",
+     "body": "P-22 has printed 400 copies of a blank page titled 'minutes'. It has been unplugged. It is still printing.\n\nThis ticket is now closed. Please use P-23."}
+  ]
+}

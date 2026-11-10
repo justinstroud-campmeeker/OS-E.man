@@ -176,9 +176,11 @@ def cmd_world(args, save: Path) -> None:
 
 
 def cmd_director(args, save: Path) -> None:
-    from .director import LocalLink, ServerLink, make_model, run_ahead, run_once
+    from .director import LocalLink, ServerLink, SplitModel, make_model, run_ahead, run_once
 
     model = make_model(args.model, args.model_name, args.base_url)
+    if args.plan_model:
+        model = SplitModel(make_model(args.plan_model, args.plan_model_name), model)
     transcripts = runtime_dir(save) / "director"
 
     def show(res) -> None:
@@ -256,6 +258,9 @@ def main() -> None:
     d.add_argument("--model-name", default=None,
                    help="model id at the endpoint (groq default: openai/gpt-oss-120b)")
     d.add_argument("--base-url", default=None, help="override the OpenAI-compatible endpoint")
+    d.add_argument("--plan-model", default=None, choices=["fake", "groq", "local"],
+                   help="a separate model for planning the day (plot, storylines, facts)")
+    d.add_argument("--plan-model-name", default=None, help="model id for --plan-model")
     d.add_argument("--dry-run", action="store_true", help="check the pack, don't apply it")
     d.add_argument("--every", type=int, default=30, help="watch: seconds between looks")
     args = ap.parse_args()

@@ -1,0 +1,15 @@
+FLOORPLAN(1)               General Commands               FLOORPLAN(1)
+
+NAME
+     floorplan, fp - Office Services floor plan, level 3
+
+SYNOPSIS
+     floorplan
+
+DESCRIPTION
+     Draws level 3 from the live building systems: door modes from
+     Tallyho Badging, room bookings from the facilities portal.
+
+     The plan is revision 2019-03. Office Services is confident it is
+     still accurate. If the plan and the floor disagree, the plan is
+     correct.

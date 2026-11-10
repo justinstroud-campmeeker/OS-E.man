@@ -236,13 +236,15 @@ def test_local_model_sends_a_schema_per_task():
     m.complete("beats", "p")
     rf = calls[0]["response_format"]
     assert rf["type"] == "json_schema" and "beats" in rf["json_schema"]["schema"]["properties"]
+    when = rf["json_schema"]["schema"]["properties"]["beats"]["items"]["properties"]["when"]
+    assert {"mystique", "mystique_below", "flag", "not_flag"} <= set(when["properties"])
 
 
 def test_a_chat_model_through_the_whole_loop(game):
     fake = FakeModel()
 
     def handler(req):
-        prompt = json.loads(req.content)["messages"][0]["content"]
+        prompt = json.loads(req.content)["messages"][-1]["content"]
         tail = prompt.rsplit("Reply as: ", 1)[1]
         task = ("plan" if tail.startswith('{"notes"') else "chatter" if tail.startswith('{"normal"')
                 else "beats" if tail.startswith('{"beats"') else "emails")
@@ -406,3 +408,153 @@ def test_storyline_facts_accumulate_and_reach_the_prompt(game):
     assert w.threads["rtl-hours"]["facts"] == ["the hours were approved at 03:12", "approver shown as doug"]
     p = plan_prompt({"threads": list(w.threads.values())}, 7)
     assert "fact: approver shown as doug" in p and "never contradict" in p
+
+
+def test_split_model_routes_plan_and_writing():
+    from os_e_man.director import SplitModel
+
+    class M:
+        def __init__(self, name):
+            self.name = name
+
+        def complete(self, task, prompt):
+            return self.name
+
+    m = SplitModel(M("big"), M("weird"))
+    assert m.name == "big+weird"
+    assert m.complete("plan", "p") == "big" and m.complete("beats", "p") == "weird"
+
+
+def test_storylines_have_age_and_closed_ones_are_remembered(game):
+    from os_e_man.director import plan_prompt
+    w = game.world
+    for day, state in ((5, "open"), (6, "open"), (7, "closed")):
+        w.apply({"id": f"dir-d{day:03d}", "for_day": day, "threads": [
+            {"id": "fridge", "title": "the fridge that locks", "state": state, "next": "x"}],
+            "beats": [{"id": f"d{day}_x", "when": {"day": day, "at": "10:00"}, "channel": "#dunmore-general",
+                       "who": "kev", "text": f"fridge, day {day}"}]})
+    assert w.threads["fridge"]["since"] == 5
+    d = w.digest(game)
+    assert d["closed_threads"] == ["the fridge that locks"]
+    p = plan_prompt(d, 8)
+    assert "the fridge that locks" in p and "must close today" in p
+
+
+def test_near_miss_speakers_are_absorbed(game):
+    from os_e_man.world import check_pack
+    rep = check_pack({"id": "t", "for_day": 3,
+                      "chatter": {"normal": [{"channel": "#dunmore-general", "who": "<kev>", "text": "the 4th floor again"},
+                                             {"channel": "#dunmore-general", "who": "Priya", "text": "noted, filing it"}]},
+                      "emails": [{"id": "d3_m", "when": {"day": 3, "at": "10:00"}, "from": "<doug.faraday>@hpcg.corp",
+                                  "subject": "room 305", "body": "please stop booking it"}]}, game.world)
+    assert [c["who"] for c in rep.pack["chatter"]["normal"]] == ["kev", "priya"]
+    assert rep.pack["emails"][0]["from"] == "doug.faraday@hpcg.corp"
+
+
+def test_storylines_cannot_close_on_their_first_days(game):
+    w = game.world
+    for day, state in ((5, "open"), (6, "closed"), (7, "closed")):
+        w.apply({"id": f"dir-d{day:03d}", "for_day": day, "threads": [
+            {"id": "room-305", "title": "room 305", "state": state, "next": "x"}],
+            "beats": [{"id": f"d{day}_y", "when": {"day": day, "at": "10:00"}, "channel": "#dunmore-general",
+                       "who": "kev", "text": f"305, day {day}"}]})
+        if day == 6:
+            assert w.threads["room-305"]["state"] == "open"
+    assert w.threads["room-305"]["state"] == "closed"
+
+
+def test_voice_goes_in_a_system_message():
+    from os_e_man.director import ChatModel, VOICE
+    m = ChatModel("local", "http://x/v1", "openai/gpt-oss-20b")
+    msgs = m.messages("plan", VOICE + "\n\nYou are writing day 5.")
+    assert msgs[0]["role"] == "system" and msgs[0]["content"].startswith(VOICE)
+    assert msgs[0]["content"].endswith("Reasoning: medium")
+    assert msgs[1] == {"role": "user", "content": "You are writing day 5."}
+    assert m.messages("beats", VOICE + "\n\nx")[0]["content"].endswith("Reasoning: low")
+    other = ChatModel("local", "http://x/v1", "some-llama")
+    assert "Reasoning" not in other.messages("plan", VOICE + "\n\nx")[0]["content"]
+    assert other.messages("plan", "no voice")[0]["role"] == "user"
+
+
+def test_looping_emails_and_name_prefixes_are_cleaned(game):
+    from os_e_man.world import check_pack, MAX_EMAILS
+    mail = [{"id": f"d3_m{i}", "when": {"day": 3, "at": "09:30"}, "from": "kmarsh@hpcg.corp",
+             "subject": "daily update" if i < 3 else f"update {i}", "body": "status"} for i in range(9)]
+    rep = check_pack({"id": "t", "for_day": 3, "emails": mail,
+                      "beats": [{"id": "d3_b", "when": {"day": 3, "at": "10:00"}, "channel": "#dunmore-general",
+                                 "who": "kev", "text": "kev: the phone on 3 is ringing again"}]}, game.world)
+    subjects = [e["subject"] for e in rep.pack["emails"]]
+    assert subjects.count("daily update") == 1 and len(subjects) == MAX_EMAILS
+    assert rep.pack["beats"][0]["text"] == "the phone on 3 is ringing again"
+
+
+def test_writers_get_tone_examples_and_copies_are_dropped(game):
+    from os_e_man.director import writer_prompt
+    from os_e_man.world import check_pack
+    from os_e_man import content
+    p = writer_prompt("beats", {}, 48, "note")
+    assert "The tone to aim for" in p
+    assert writer_prompt("beats", {}, 48, "note") == p            # same day, same examples
+    copied = content.load("director_examples.json")["chat"][0]
+    rep = check_pack({"id": "t", "for_day": 3, "beats": [
+        {"id": "d3_c", "when": {"day": 3, "at": "10:00"}, "channel": "#dunmore-general", "who": "kev", "text": copied},
+        {"id": "d3_n", "when": {"day": 3, "at": "11:00"}, "channel": "#dunmore-general", "who": "kev", "text": "orion is booked by someone who left in 2017"}]},
+        game.world)
+    assert [b["id"] for b in rep.pack["beats"]] == ["d3_n"]
+
+
+def test_repeated_lines_are_sent_back_until_new(game):
+    from os_e_man import content
+    copied = content.load("director_examples.json")["chat"][0]
+
+    def beats(text):
+        return json.dumps({"beats": [{"id": "d1_a", "when": {"day": 1, "at": "10:00"},
+                                      "channel": "#dunmore-general", "who": "kev", "text": text}]})
+
+    class Copycat(Scripted):
+        def __init__(self):
+            super().__init__()
+            self.beat_prompts = []
+
+        def complete(self, task, prompt):
+            if task == "beats":
+                self.beat_prompts.append(prompt)
+                return beats(copied if len(self.beat_prompts) == 1 else "row C has a 33rd chair now")
+            return self.fake.complete(task, prompt)
+
+    m = Copycat()
+    res = go(LocalLink(game), m, day=1)
+    assert res.status == "applied"
+    assert len(m.beat_prompts) == 2 and copied in m.beat_prompts[1]
+    assert any("rewriting" in line for line in res.log)
+    assert any(b.get("text") == "row C has a 33rd chair now" for b in game.world.beats)
+
+
+@pytest.mark.parametrize("text, kept", [
+    ("the count meeting continues at 07:00; organizer field remains blank", False),
+    ("lift status shows 5 again despite building having 4 floors", False),
+    ("chair at end of row C is warm each morning; no one sits there", False),
+    ("ext 312 keeps ringing after the cutoff and the voicemail greeting is in my voice", True),
+    ("the phone on 3 is ringing again", True),
+])
+def test_near_copies_of_earlier_lines_are_caught(game, text, kept):
+    from os_e_man.world import check_pack
+    rep = check_pack({"id": "t", "for_day": 3, "beats": [
+        {"id": "d3_a", "when": {"day": 3, "at": "10:00"}, "channel": "#dunmore-general", "who": "kev",
+         "text": text}]}, game.world)
+    filed = bool(rep.pack and rep.pack.get("beats"))
+    assert filed == kept
+    if not kept:
+        assert any("nearly word for word" in d for d in rep.drift)
+
+
+def test_branch_pairs_may_resemble_each_other_and_ids_are_trimmed(game):
+    from os_e_man.world import check_pack
+    rep = check_pack({"id": "t", "for_day": 3, "beats": [
+        {"id": "d3_a", "when": {"day": 3, "at": "10:00", "mystique_below": 3}, "channel": "#dunmore-general",
+         "who": "kev", "text": "d3_01 printer hp-04 printed a blank page stamped 10:45 this morning"},
+        {"id": "d3_b", "when": {"day": 3, "at": "10:00", "mystique": 3}, "channel": "#dunmore-general",
+         "who": "kev", "text": "printer hp-04 printed a page stamped 10:45 tomorrow morning, reading alpha"}]},
+        game.world)
+    texts = [b["text"] for b in rep.pack["beats"]]
+    assert texts[0] == "printer hp-04 printed a blank page stamped 10:45 this morning" and len(texts) == 2

@@ -104,9 +104,15 @@ document by someone who doesn't know they're in a story: chat, mail, notices.
 - Flat, bureaucratic, believable. The joke is how accurate it is. No winking, no hacker lingo,
   no exclamation marks.
 - Ticket numbers and tracking IDs are welcome (ITSD-, HPCG-, FAC-).
-- Each day has one small thing that is slightly wrong (a label, a booking, a record, a
-  number) and nobody can explain. Mundane, specific, never resolved. A little SCP-style
-  weirdness is welcome, logged as if it were routine paperwork. Not sci-fi.
+- Each day has one thing that is wrong and nobody can explain. It starts mundane (a label,
+  a booking, a record, a number) and is allowed to get outlandish: a meeting room that is
+  on the floor plan but not the floor, a colleague who replies from a desk that was removed,
+  timestamps from tomorrow, the same voicemail left by everyone. Specific, never explained,
+  never resolved.
+- Creepypasta, told through paperwork: found notes, unofficial rules ("do not answer the
+  3rd floor phone after 16:40"), procedures for things there shouldn't be procedures for,
+  people who notice a pattern and then stop mentioning it. The dread is in what is left
+  out. No gore, no monsters on screen, not sci-fi.
 - Chat is chat: short, mostly lowercase, typed by tired people. Match each person's voice,
   but never reuse their sample lines or anything in recent chat: anything already said is
   thrown away.
@@ -118,22 +124,25 @@ document by someone who doesn't know they're in a story: chat, mail, notices.
 Reply with JSON only."""
 
 SCHEMAS = {
-    "plan": '{"notes": {"chatter": "one line", "beats": "one line", "emails": "one line"},'
+    "plan": '{"notes": {"chatter": "the strange detail to use", "beats": "the strange detail to use",'
+            ' "emails": "the strange detail to use"},'
             ' "threads": [{"id": "short-kebab-id", "title": "what it is", "state": "open|closed",'
             ' "next": "where it goes next", "facts": ["a concrete detail established today"]}]}',
-    "chatter": '{"normal": [{"channel": "#dunmore-general", "who": "<person key>", "text": "..."}],'
+    "chatter": '{"normal": [{"channel": "#dunmore-general", "who": "kev", "text": "..."}],'
                ' "uneasy": [...], "afraid": [...]}',
     "beats": '{"beats": [{"id": "d<D>_<short>", "when": {"day": D, "at": "HH:MM", ...branch keys},'
-             ' "channel": "#...", "who": "<person key>", "text": "..."}]}',
+             ' "channel": "#...", "who": "kev", "text": "..."}]}',
     "emails": '{"emails": [{"id": "d<D>_<short>", "when": {"day": D, "at": "HH:MM", ...branch keys},'
-              ' "delay": 0, "from": "<handle>@hpcg.corp", "subject": "...", "body": "..."}]}',
+              ' "delay": 0, "from": "kmarsh@hpcg.corp", "subject": "...", "body": "..."}]}',
 }
 
 
 # The same shapes as JSON Schema, for servers that constrain output to a schema (LM Studio's
 # structured output). The grammar forces valid JSON even from models that can't write it.
 _S, _I = {"type": "string"}, {"type": "integer"}
-_WHEN = {"type": "object", "properties": {"day": _I, "at": _S}, "required": ["day", "at"]}
+_WHEN = {"type": "object", "required": ["day", "at"],      # plus optional branch keys
+         "properties": {"day": _I, "at": _S, "mystique": _I, "mystique_below": _I,
+                        "curiosity": _I, "curiosity_below": _I, "flag": _S, "not_flag": _S}}
 _LINE = {"type": "object", "properties": {"channel": _S, "who": _S, "text": _S},
          "required": ["channel", "who", "text"]}
 
@@ -168,7 +177,8 @@ def _situation(digest: dict, day: int) -> str:
                        for k, lines in digest.get("voices", {}).items())
     chat = "\n".join(f"  {c['channel']} <{c['who']}> {c['text']}" for c in digest.get("recent_chat", [])[-8:])
     mail = "\n".join(f"  {e['from']}: {e['subject']}" for e in digest.get("inbox", [])[-5:])
-    threads = "\n".join(f"  - {t['id']}: {t.get('title', '')} (last seen day {t.get('day', '?')}; "
+    threads = "\n".join(f"  - {t['id']}: {t.get('title', '')} (running since day "
+                        f"{t.get('since', t.get('day', '?'))}, last seen day {t.get('day', '?')}; "
                         f"next: {t.get('next', '?')})"
                         + "".join(f"\n      fact: {f}" for f in t.get("facts", []))
                         for t in digest.get("threads", []))
@@ -185,6 +195,8 @@ def _situation(digest: dict, day: int) -> str:
             f"Recent mail:\n{mail or '  (none)'}\n"
             f"Recent records anomalies: {'; '.join(digest.get('anomalies', [])[-3:]) or 'none'}\n"
             f"Your storylines so far:\n{threads or '  (none yet)'}\n"
+            f"Storylines already closed (don't repeat them): "
+            f"{'; '.join(digest.get('closed_threads', [])) or 'none'}\n"
             f"Days you have already written:\n{written or '  (none yet)'}")
 
 
@@ -201,22 +213,50 @@ def _branching(digest: dict) -> str:
         f"  things they could still look at: {pokeable}\n"
         "Write branches in pairs: two versions of the same moment (same time, different ids), one\n"
         "for each side of one condition, e.g. {\"mystique\": 3} and {\"mystique_below\": 3}.\n"
-        "The two versions must differ in what happens, not just in wording: one side is mundane,\n"
-        "the other is the same moment gone slightly further wrong.")
+        "The two versions must differ in what happens, not just in wording. The mundane version\n"
+        "goes on the calm side (\"mystique_below\", \"curiosity_below\", \"not_flag\"); the version\n"
+        "that has gone further wrong goes on the side where the player has stirred things up\n"
+        "(\"mystique\", \"curiosity\", \"flag\"). Never the other way round.")
 
 
 def plan_prompt(digest: dict, day: int) -> str:
     return (f"{VOICE}\n\n{_situation(digest, day)}\n\n"
-            f"Plan day {day} in a few words per slot. Continue one or two of your storylines "
-            f"(start one if you have fewer than two). A storyline runs for several days before it "
-            f"closes, and nothing is ever explained. Every day a storyline you continue gets one "
-            f"new, concrete development (a second instance, a new number, a reply that makes it "
-            f"worse); it never just waits for tomorrow. Return every storyline you touched in "
-            f"\"threads\", with its new state and where it goes next.\n"
+            f"Plan day {day}. Keep one or two storylines open.\n"
+            f"In \"notes\", give each slot one or two sentences with the exact strange detail the "
+            f"writer must use: who, which object or room, an exact number, time or ID, and what is "
+            f"wrong with it. The writers are literal: if you give them something vague, they write "
+            f"something dull. Give them something specific and odd.\n"
+            f"Every storyline has an arc of 3 to 6 days: a strange start, a turn around the middle "
+            f"(someone notices, a second department gets involved, the thing turns out to be bigger "
+            f"or older than it looked), and an ending. It ends unexplained: a ticket closed as "
+            f"'no fault found', a policy quietly changed, someone who stops mentioning it. A "
+            f"storyline running for 6 days must close today. When one closes, start a new one, "
+            f"about something different (a different object, department, person or system).\n"
+            f"Every day a storyline you continue gets one new, concrete development, and it must "
+            f"be a different kind of development from the day before: never the same event with "
+            f"the next number. Return every storyline you touched in \"threads\", with its new "
+            f"state and where it goes next.\n"
             f"The facts under a storyline are canon: never contradict them, and reuse the same "
             f"names, numbers, times and IDs. Put each new concrete detail you introduce today in "
             f"that storyline's \"facts\" (short, one detail each).\n"
             f"Reply as: {SCHEMAS['plan']}")
+
+
+def _examples(slot: str, day: int, n_chat: int = 4, n_mail: int = 2) -> str:
+    """A few hand-written lines in the target voice (content/director_examples.json), a
+    different few each day. Small models copy a tone far better than they follow a rule."""
+    import random
+    from . import content
+    ex = content.load("director_examples.json")
+    rng = random.Random(f"{day}:{slot}")
+    if slot == "emails":
+        picks = rng.sample(ex["emails"], min(n_mail, len(ex["emails"])))
+        body = "\n\n".join(f"  Subject: {e['subject']}\n  " + e["body"].replace("\n", "\n  ")
+                            for e in picks)
+    else:
+        body = "\n".join(f"  {line}" for line in rng.sample(ex["chat"], min(n_chat, len(ex["chat"]))))
+    return ("The tone to aim for (examples from elsewhere in the building; never copy them, "
+            f"write new ones about today's plan):\n{body}\n")
 
 
 def writer_prompt(slot: str, digest: dict, day: int, note: str) -> str:
@@ -224,12 +264,14 @@ def writer_prompt(slot: str, digest: dict, day: int, note: str) -> str:
         "chatter": "Write 1-2 ambient chat lines for each mood: normal, uneasy, afraid. Each mood is "
                    "more tense than the last, and all of them stay deadpan.",
         "beats": f"Write 3-5 scheduled chat lines for day {day}, between 09:00 and 16:30. "
-                 f"Include one branching pair.",
+                 f"Include one branching pair. Spread them across people: nobody says more than "
+                 f"two of them, and each person sounds like themselves (see how they talk).",
         "emails": f"Write 1-2 emails delivered on day {day}, between 09:00 and 16:30. "
                   f"If there are two, make them a branching pair.",
     }
     branch = f"\n{_branching(digest)}\n" if slot in ("beats", "emails") else "\n"
-    return (f"{VOICE}\n\n{_situation(digest, day)}\n\nThe plan for this slot: {note}\n{branch}"
+    return (f"{VOICE}\n\n{_situation(digest, day)}\n\n{_examples(slot, day)}\n"
+            f"The plan for this slot: {note}\n{branch}"
             f"{asks[slot]} Start every id with \"d{day}_\".\nReply as: {SCHEMAS[slot]}")
 
 
@@ -262,6 +304,27 @@ def _section(slot: str, data):
 
 # ----------------------------------------------------------------- one pass
 CALLS_PER_DAY = 1 + len(SLOTS)
+REWRITES = 2          # times a slot is sent back for lines that repeat something already said
+
+
+def _repeats(slot: str, sec, report: dict) -> list[str]:
+    """The lines in this slot that the checker found to be repeats (copied canon, earlier
+    days, the tone examples, or another line in the same day)."""
+    out = []
+    for d in report.get("drift", []):
+        m = re.match(r"^(beat|chatter\.(\w+)) #(\d+) repeated", d)
+        if not m:
+            continue
+        i = int(m.group(3)) - 1
+        if slot == "beats" and m.group(1) == "beat" and isinstance(sec, list):
+            items = sec
+        elif slot == "chatter" and m.group(2) and isinstance(sec, dict):
+            items = sec.get(m.group(2), [])
+        else:
+            continue
+        if 0 <= i < len(items) and isinstance(items[i], dict):
+            out.append(str(items[i].get("text", "")))
+    return out
 
 
 @dataclass
@@ -318,10 +381,22 @@ async def run_once(link: Link, model: Model, *, day: int | None = None, dry_run:
         pack["threads"] = _threads(plan)
     for slot in SLOTS:
         note = notes.get(slot) if isinstance(notes.get(slot), str) else "keep the office going"
-        sec = _section(slot, await ask(slot, writer_prompt(slot, digest, day, note)))
+        prompt = writer_prompt(slot, digest, day, note)
+        sec = _section(slot, await ask(slot, prompt))
         if sec is None:
             res.log.append(f"{slot}: nothing usable came back")
             continue
+        for _ in range(REWRITES if slot in ("beats", "chatter") else 0):
+            repeats = _repeats(slot, sec, await link.check({**pack, slot: sec}))
+            if not repeats:
+                break
+            res.log.append(f"{slot}: {len(repeats)} line(s) repeated something already said; rewriting")
+            again = _section(slot, await ask(slot, prompt + (
+                "\n\nYour last answer repeated lines that have already been said, so they can't be "
+                "used. Write the whole answer again, with every line new and different from these:\n"
+                + "\n".join(f"  {t}" for t in repeats))))
+            if again is not None:
+                sec = again
         pack[slot] = sec
 
     if transcript_dir:
@@ -515,10 +590,22 @@ class ChatModel:
         self.json_mode = True
         self.structured = structured     # send a JSON schema per task (LM Studio)
 
+    def messages(self, task: str, prompt: str) -> list[dict]:
+        """The standing rules (VOICE) go in a system message, the day's situation and task in
+        the user message. gpt-oss models also read their reasoning effort from the system
+        prompt: think harder about the plot, less about the writing."""
+        if not prompt.startswith(VOICE):
+            return [{"role": "user", "content": prompt}]
+        system = VOICE
+        if "gpt-oss" in self.model:
+            system += "\nReasoning: " + ("medium" if task == "plan" else "low")
+        return [{"role": "system", "content": system},
+                {"role": "user", "content": prompt[len(VOICE):].lstrip()}]
+
     def complete(self, task: str, prompt: str) -> str:
         import time
         body = {"model": self.model, "temperature": self.temperature,
-                "messages": [{"role": "user", "content": prompt}]}
+                "messages": self.messages(task, prompt)}
         if self.structured and task in JSON_SCHEMAS:
             body["response_format"] = {"type": "json_schema", "json_schema": {
                 "name": task, "strict": True, "schema": JSON_SCHEMAS[task]}}
@@ -544,6 +631,17 @@ class ChatModel:
             return r.json()["choices"][0]["message"].get("content") or ""
         r.raise_for_status()
         return ""
+
+
+class SplitModel:
+    """One model plans the day (and keeps the plot and its facts); another writes the slots."""
+
+    def __init__(self, planner: Model, writer: Model):
+        self.planner, self.writer = planner, writer
+        self.name = f"{planner.name}+{writer.name}"
+
+    def complete(self, task: str, prompt: str) -> str:
+        return (self.planner if task == "plan" else self.writer).complete(task, prompt)
 
 
 GROQ_URL = "https://api.groq.com/openai/v1"

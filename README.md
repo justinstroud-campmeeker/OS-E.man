@@ -76,6 +76,7 @@ $env:GROQ_API_KEY = "..."                                # free key from console
 python -m os_e_man director ahead --model groq --days 3  # write the next 3 days
 python -m os_e_man director watch --model groq           # keep writing while you're away
 python -m os_e_man director --model local --model-name <id>   # LM Studio on 127.0.0.1:1234
+python -m os_e_man director watch --model local --model-name <id> --plan-model groq   # Groq plans, local writes
 ```
 
 With Groq, the prompts (the fictional world state and your recent in-game commands) are
